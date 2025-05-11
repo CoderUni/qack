@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/gen/fonts.gen.dart';
 import 'package:qack/l10n/l10n.dart';
 import 'package:qack/layout/device_info_setter.dart';
-import 'package:qack/presentation/home/view/home_page.dart';
 import 'package:qack/presentation/landing/components/cubit/bottom_navigation_bar_cubit.dart';
 import 'package:qack/presentation/landing/view/landing_page.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';

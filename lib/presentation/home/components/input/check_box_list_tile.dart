@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:qack/layout/layout_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/home/components/input/cubit/cubit.dart';
 
 class AppCheckBoxListTile extends StatelessWidget {

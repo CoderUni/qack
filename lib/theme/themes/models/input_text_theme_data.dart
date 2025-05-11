@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:qack/presentation/home/components/input/input_text.dart'
     show InputText;
-import 'package:flutter/material.dart';
 
 /// {@template input_text_theme_data}
 /// Stores input text theme configuration

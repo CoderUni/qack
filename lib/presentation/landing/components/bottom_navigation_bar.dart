@@ -1,10 +1,10 @@
 import 'package:bottom_bar/bottom_bar.dart';
-import 'package:qack/layout/layout_handler.dart';
-import 'package:qack/presentation/landing/components/components.dart';
-import 'package:qack/theme/theme.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qack/layout/layout_handler.dart';
+import 'package:qack/presentation/landing/components/components.dart';
+import 'package:qack/theme/theme.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({

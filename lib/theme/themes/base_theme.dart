@@ -1,6 +1,6 @@
-import 'package:qack/theme/themes/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:qack/theme/themes/models/models.dart';
 
 /// {@template base_theme}
 /// Template for creating custom themes

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qack/theme/theme.dart';
-import 'package:qack/theme/themes/light_theme.dart';
 
 class InputText extends StatelessWidget {
   const InputText({

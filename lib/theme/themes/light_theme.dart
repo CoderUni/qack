@@ -107,6 +107,7 @@ final class LightTheme extends BaseTheme {
   @override
   SettingsThemeData get settingsThemeData => const SettingsThemeData(
         checkmarkColor: AppColors.green500,
-        editNameColor: AppColors.primary500,
+        editUsernameColor: AppColors.primary500,
+        editTranslatorColor: AppColors.warning500,
       );
 }

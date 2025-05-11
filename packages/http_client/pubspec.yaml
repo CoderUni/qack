@@ -1,0 +1,22 @@
+name: http_client
+description: http client package
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+  flutter: ^3.24.0
+
+dependencies:
+  dio: ^5.8.0+1
+  dio_smart_retry: ^7.0.1
+  flutter:
+    sdk: flutter
+  pretty_dio_logger: ^1.4.0
+  sentry_dio: ^8.14.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^6.0.0

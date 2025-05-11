@@ -1,0 +1,1 @@
+/Users/quantum/Projects/qack/build/app/intermediates/cxx/Debug/6s61131q/obj/arm64-v8a

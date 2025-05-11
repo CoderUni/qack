@@ -1,0 +1,2 @@
+/Users/quantum/Projects/qack/android/app/.cxx/Debug/6s61131q/x86_64/CMakeFiles/edit_cache.dir
+/Users/quantum/Projects/qack/android/app/.cxx/Debug/6s61131q/x86_64/CMakeFiles/rebuild_cache.dir

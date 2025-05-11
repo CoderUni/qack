@@ -1,0 +1,56 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
+import 'package:http_client/http_client.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
+class AppBlocObserver extends BlocObserver {
+  const AppBlocObserver();
+
+  @override
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
+    super.onChange(bloc, change);
+    log('onChange(${bloc.runtimeType}, $change)');
+  }
+
+  @override
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
+    log('onError(${bloc.runtimeType}, $error, $stackTrace)');
+    super.onError(bloc, error, stackTrace);
+  }
+}
+
+Future<void> bootstrap(
+  FutureOr<Widget> Function(
+    FlutterSecureStorage secureStorage,
+  ) builder,
+) async {
+  FlutterError.onError = (details) {
+    // TODO: Add Sentry error reporting
+    /*
+    Sentry.captureException(
+      details,
+      stackTrace: details.stack,
+    );
+    */
+
+    log(details.exceptionAsString(), stackTrace: details.stack);
+  };
+
+  // Initialize local storage repository
+  // final localStorage = LocalStorage(sharedPreferences);
+
+  // Initialize secure storage
+  const secureStorage = FlutterSecureStorage();
+
+  // Initialize HTTP repository
+  GetIt.instance.registerLazySingleton<Http>(Http.new);
+
+  Bloc.observer = const AppBlocObserver();
+
+  runApp(await builder(secureStorage));
+}

@@ -90,10 +90,10 @@ final class LightTheme extends BaseTheme {
   NavigationThemeData get navigationThemeData => NavigationThemeData(
         inactiveNavigationIconColor: AppColors.gray500,
         inactiveNavigationTitleColor: AppColors.gray700,
-        activeMenuColor: AppColors.primary500,
-        activeMenuTitleColor: AppColors.primary700,
-        activeOrderColor: AppColors.orange500,
-        activeOrderTitleColor: AppColors.orange600,
+        activeHomeColor: AppColors.primary500,
+        activeHomeTitleColor: AppColors.primary700,
+        activeSettingsColor: AppColors.orange500,
+        activeSettingsTitleColor: AppColors.orange600,
         sideNavigationBarShadow: AppShadows.md(),
       );
 
@@ -103,7 +103,7 @@ final class LightTheme extends BaseTheme {
         iconColor: const Color(0xFF4E4E4E),
         hintColor: const Color(0xFF727272),
       );
-      
+
   @override
   SettingsThemeData get settingsThemeData => const SettingsThemeData(
         checkmarkColor: AppColors.green500,

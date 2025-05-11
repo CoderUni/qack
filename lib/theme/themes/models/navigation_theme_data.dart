@@ -8,10 +8,10 @@ class NavigationThemeData {
   const NavigationThemeData({
     required this.inactiveNavigationIconColor,
     required this.inactiveNavigationTitleColor,
-    required this.activeMenuColor,
-    required this.activeMenuTitleColor,
-    required this.activeOrderColor,
-    required this.activeOrderTitleColor,
+    required this.activeHomeColor,
+    required this.activeHomeTitleColor,
+    required this.activeSettingsColor,
+    required this.activeSettingsTitleColor,
     required this.sideNavigationBarShadow,
   });
 
@@ -21,17 +21,17 @@ class NavigationThemeData {
   /// Inactive color of navigation bar title
   final Color inactiveNavigationTitleColor;
 
-  /// Active color of menu navigation item
-  final Color activeMenuColor;
+  /// Active color of home navigation item
+  final Color activeHomeColor;
 
-  /// Active color of menu navigation title
-  final Color activeMenuTitleColor;
+  /// Active color of home navigation title
+  final Color activeHomeTitleColor;
 
-  /// Active color of order navigation item
-  final Color activeOrderColor;
+  /// Active color of settings navigation item
+  final Color activeSettingsColor;
 
-  /// Active color of order navigation title
-  final Color activeOrderTitleColor;
+  /// Active color of settings navigation title
+  final Color activeSettingsTitleColor;
 
   /// Shadow to cast on side navigation bar
   final List<BoxShadow> sideNavigationBarShadow;

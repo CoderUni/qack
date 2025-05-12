@@ -19,6 +19,8 @@ class InputText extends StatelessWidget {
     this.prefix,
     this.prefixIcon,
     this.suffixIcon,
+    this.prefixIconConstraints,
+    this.suffixIconConstraints,
     this.textCapitalization = TextCapitalization.none,
     this.keyboardType,
     this.inputFormatters,
@@ -45,6 +47,10 @@ class InputText extends StatelessWidget {
   final Widget? prefix;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+
+  final BoxConstraints? prefixIconConstraints;
+  final BoxConstraints? suffixIconConstraints;
+
   final TextCapitalization textCapitalization;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
@@ -84,11 +90,20 @@ class InputText extends StatelessWidget {
         labelStyle:
             AppTextStyle.textMD.regular.copyWith(color: theme.textColor2),
         prefix: prefix,
-        prefixIcon: IconTheme(
-          data: IconThemeData(color: inputTextTheme.iconColor),
-          child: prefixIcon ?? const SizedBox(),
-        ),
-        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon != null
+            ? IconTheme(
+                data: IconThemeData(color: inputTextTheme.iconColor),
+                child: prefixIcon!,
+              )
+            : null,
+        suffixIcon: suffixIcon != null
+            ? IconTheme(
+                data: IconThemeData(color: inputTextTheme.iconColor),
+                child: suffixIcon!,
+              )
+            : null,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
       ),
       textCapitalization: textCapitalization,
       keyboardType: keyboardType,

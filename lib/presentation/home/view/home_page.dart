@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:qack/presentation/home/components/input/input_text.dart';
-import 'package:qack/presentation/home/components/input/search_bar.dart';
 import 'package:qack/utils/extensions/date_time.dart';
+import 'package:qack/widgets/input/input.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

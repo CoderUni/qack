@@ -9,6 +9,8 @@ class SettingsThemeData {
     required this.checkmarkColor,
     required this.editUsernameColor,
     required this.editTranslatorColor,
+    required this.settingsCheckmarkColor,
+    required this.switchActiveColor,
   });
 
   /// Color of checkmark icon
@@ -17,6 +19,12 @@ class SettingsThemeData {
   /// Color of edit username settings list tile
   final Color editUsernameColor;
 
-  /// Colro of edit translator settings list tile
+  /// Color of edit translator settings list tile
   final Color editTranslatorColor;
+
+  /// Color of settings checkmark icon
+  final Color settingsCheckmarkColor;
+
+  /// Active color of settings switch
+  final Color switchActiveColor;
 }

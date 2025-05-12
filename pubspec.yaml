@@ -29,6 +29,11 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   bottom_bar: ^2.0.3
   lucide_icons: ^0.257.0
+  vector_graphics_compiler: ^1.1.16
+  flutter_svg: ^2.1.0
+  vector_graphics: ^1.1.18
+  freezed_annotation: ^3.0.0
+  json_serializable: ^6.9.5
 
 
 dev_dependencies:
@@ -37,6 +42,7 @@ dev_dependencies:
   flutter_gen_runner: ^5.10.0
   flutter_test:
     sdk: flutter
+  freezed: ^3.0.6
   mocktail: ^1.0.4
   very_good_analysis: ^6.0.0
 

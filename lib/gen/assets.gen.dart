@@ -11,85 +11,35 @@ import 'package:flutter/widgets.dart';
 
 class $AssetsFontsGen {
   const $AssetsFontsGen();
-
-  /// File path: assets/fonts/Black.ttf
-  String get black => 'assets/fonts/Black.ttf';
-
-  /// File path: assets/fonts/BlackItalic.ttf
-  String get blackItalic => 'assets/fonts/BlackItalic.ttf';
-
-  /// File path: assets/fonts/Bold.ttf
-  String get bold => 'assets/fonts/Bold.ttf';
-
-  /// File path: assets/fonts/BoldItalic.ttf
-  String get boldItalic => 'assets/fonts/BoldItalic.ttf';
-
-  /// File path: assets/fonts/ExtraBold.ttf
-  String get extraBold => 'assets/fonts/ExtraBold.ttf';
-
-  /// File path: assets/fonts/ExtraBoldItalic.ttf
-  String get extraBoldItalic => 'assets/fonts/ExtraBoldItalic.ttf';
-
-  /// File path: assets/fonts/ExtraLight.ttf
-  String get extraLight => 'assets/fonts/ExtraLight.ttf';
-
-  /// File path: assets/fonts/ExtraLightItalic.ttf
-  String get extraLightItalic => 'assets/fonts/ExtraLightItalic.ttf';
-
-  /// File path: assets/fonts/Italic.ttf
-  String get italic => 'assets/fonts/Italic.ttf';
-
-  /// File path: assets/fonts/Light.ttf
-  String get light => 'assets/fonts/Light.ttf';
-
-  /// File path: assets/fonts/LightItalic.ttf
-  String get lightItalic => 'assets/fonts/LightItalic.ttf';
-
-  /// File path: assets/fonts/Medium.ttf
-  String get medium => 'assets/fonts/Medium.ttf';
-
-  /// File path: assets/fonts/MediumItalic.ttf
-  String get mediumItalic => 'assets/fonts/MediumItalic.ttf';
-
-  /// File path: assets/fonts/Regular.ttf
-  String get regular => 'assets/fonts/Regular.ttf';
-
-  /// File path: assets/fonts/SemiBold.ttf
-  String get semiBold => 'assets/fonts/SemiBold.ttf';
-
-  /// File path: assets/fonts/SemiBoldItalic.ttf
-  String get semiBoldItalic => 'assets/fonts/SemiBoldItalic.ttf';
-
-  /// List of all assets
-  List<String> get values => [
-    black,
-    blackItalic,
-    bold,
-    boldItalic,
-    extraBold,
-    extraBoldItalic,
-    extraLight,
-    extraLightItalic,
-    italic,
-    light,
-    lightItalic,
-    medium,
-    mediumItalic,
-    regular,
-    semiBold,
-    semiBoldItalic,
-  ];
 }
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
+
+  /// File path: assets/images/baidu_icon.svg
+  String get baiduIcon => 'assets/images/baidu_icon.svg';
+
+  /// File path: assets/images/baidu_icon.svg.vec
+  String get baiduIconSvg => 'assets/images/baidu_icon.svg.vec';
+
+  /// File path: assets/images/google_icon.svg
+  String get googleIcon => 'assets/images/google_icon.svg';
+
+  /// File path: assets/images/google_icon.svg.vec
+  String get googleIconSvg => 'assets/images/google_icon.svg.vec';
 
   /// File path: assets/images/page_not_found.png
   AssetGenImage get pageNotFound =>
       const AssetGenImage('assets/images/page_not_found.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [pageNotFound];
+  List<dynamic> get values => [
+    baiduIcon,
+    baiduIconSvg,
+    googleIcon,
+    googleIconSvg,
+    pageNotFound,
+  ];
 }
 
 class Assets {

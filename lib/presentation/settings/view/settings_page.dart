@@ -3,7 +3,10 @@ import 'package:gap/gap.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/settings/components/edit_settings_list_tile.dart';
+import 'package:qack/presentation/settings/view/edit_translator_page.dart';
 import 'package:qack/theme/theme.dart';
+import 'package:qack/utils/routes/slide_transition.dart';
+import 'package:qack/widgets/divider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -67,12 +70,20 @@ class SettingsView extends StatelessWidget {
                       title: 'Edit Username',
                       onTap: () {},
                     ),
-                    Gap(settingsListTileSpacing),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: settingsListTileSpacing / 2,
+                      ),
+                      child: const AppDivider(),
+                    ),
                     EditSettingsListTile(
                       color: theme.settingsThemeData.editTranslatorColor,
                       icon: Icons.translate_outlined,
                       title: 'Translator',
-                      onTap: () => {},
+                      onTap: () => {
+                        Navigator.of(context)
+                            .push(slideHorizontal(const EditTranslatorPage())),
+                      },
                     ),
                     Gap(settingsListTileSpacing),
                   ],

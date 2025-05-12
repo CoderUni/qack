@@ -109,5 +109,7 @@ final class LightTheme extends BaseTheme {
         checkmarkColor: AppColors.green500,
         editUsernameColor: AppColors.primary500,
         editTranslatorColor: AppColors.warning500,
+        settingsCheckmarkColor: AppColors.green400,
+        switchActiveColor: AppColors.green500,
       );
 }

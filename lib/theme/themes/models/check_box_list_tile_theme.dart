@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qack/presentation/home/components/input/check_box_list_tile.dart'
-    show AppCheckBoxListTile;
+import 'package:qack/widgets/input/check_box_list_tile.dart';
+
 
 /// {@template check_box_list_tile_theme_data}
 /// Stores checkbox list tile configuration

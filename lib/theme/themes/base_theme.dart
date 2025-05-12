@@ -54,13 +54,13 @@ abstract class BaseTheme {
   /// Shadow configuration of [Card] with high elevation
   List<BoxShadow> get cardShadow3;
 
-  /// Darker color of text
+  /// Dark color of text
   Color get textColor1;
 
   /// Regular color of text
   Color get textColor2;
 
-  /// Lighter color of text
+  /// Light color of text
   Color get textColor3;
 
   /// {@macro app_button_theme_data}

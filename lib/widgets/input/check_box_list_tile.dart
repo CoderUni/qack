@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:qack/layout/layout_handler.dart';
-import 'package:qack/presentation/home/components/input/cubit/cubit.dart';
-
+import 'package:qack/widgets/input/cubit/check_box_list_tile_cubit.dart';
 class AppCheckBoxListTile extends StatelessWidget {
   AppCheckBoxListTile({
     required this.color,

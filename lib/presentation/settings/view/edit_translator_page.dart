@@ -9,12 +9,10 @@ import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/cubit/enable_translator_cubit.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 import 'package:qack/theme/theme.dart';
-import 'package:qack/theme/themes/light_theme.dart';
-import 'package:qack/widgets/divider.dart';
+import 'package:qack/widgets/app_bar/back_button_app_bar.dart';
 import 'package:qack/widgets/input/input.dart';
 import 'package:qack/widgets/input/input_switch.dart';
 import 'package:vector_graphics/vector_graphics.dart';
-import 'package:qack/widgets/app_bar/back_button_app_bar.dart';
 
 class EditTranslatorPage extends StatelessWidget {
   const EditTranslatorPage({super.key});

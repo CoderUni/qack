@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:qack/layout/layout.dart';
 import 'package:qack/theme/theme.dart';
 import 'package:qack/widgets/buttons/buttons.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BackButtonAppBar extends StatelessWidget implements PreferredSizeWidget {
   const BackButtonAppBar({

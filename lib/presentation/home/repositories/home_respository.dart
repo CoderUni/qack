@@ -6,7 +6,6 @@ final class HomeRepository {
 
   Future<String> translateText(String text) async {
     final httpClient = GetIt.I<Http>();
-    
 
     return 'Translated: $text';
   }

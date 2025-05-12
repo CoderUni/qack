@@ -122,7 +122,7 @@ class Http {
     }
   }
 
-  /// Performs a GET (image) request to the specified [url]. 
+  /// Performs a GET (image) request to the specified [url].
   /// Returns the response from the server.
   /// Throws an [HttpException] if the request fails.
   Future<Uint8List> getFile(String url) async {

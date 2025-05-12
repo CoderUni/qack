@@ -3,7 +3,7 @@ abstract class LinkConstants {
 
   /// Base URL for the DeepL API
   static const String deepLBaseUrl = 'https://api.deepl.com/$deeplAPIVersion';
-  
+
   /// Version of the DeepL API
   static const String deeplAPIVersion = 'v2';
 

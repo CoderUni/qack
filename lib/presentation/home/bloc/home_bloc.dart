@@ -14,7 +14,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepository homeRepository;
 
   Future<void> _onHomeTextChanged(
-      HomeTextChanged event, Emitter<HomeState> emit,) async {
+    HomeTextChanged event,
+    Emitter<HomeState> emit,
+  ) async {
     try {
       emit(const HomeTextTranslateLoading());
 

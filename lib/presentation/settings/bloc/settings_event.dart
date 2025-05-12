@@ -21,7 +21,7 @@ final class SettingsEditTranslator extends SettingsEvent {
   });
 
   final GlobalKey<FormState> formKey;
-  
+
   final List<TranslatorApp> enabledTranslators;
 
   // Google api keys

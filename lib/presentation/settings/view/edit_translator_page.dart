@@ -84,19 +84,19 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
     final apiKeys =
         context.read<SettingsBloc>().state.translatorSettings?.apiKeys;
 
-      // Set the initial values for the controllers
-      googleApiKeyController = TextEditingController(
-        text: apiKeys?[KeyNameConstants.google],
-      );
+    // Set the initial values for the controllers
+    googleApiKeyController = TextEditingController(
+      text: apiKeys?[KeyNameConstants.google],
+    );
 
-      baiduAppIDController = TextEditingController(
-        text: apiKeys?[KeyNameConstants.baiduAppID],
-      );
+    baiduAppIDController = TextEditingController(
+      text: apiKeys?[KeyNameConstants.baiduAppID],
+    );
 
-      baiduSecretKeyController = TextEditingController(
-        text: apiKeys?[KeyNameConstants.baiduSecretKey],
-      );
-    
+    baiduSecretKeyController = TextEditingController(
+      text: apiKeys?[KeyNameConstants.baiduSecretKey],
+    );
+
     super.initState();
   }
 

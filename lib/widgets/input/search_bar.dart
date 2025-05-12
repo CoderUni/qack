@@ -45,7 +45,7 @@ class AppSearchBar extends StatelessWidget {
           color: const Color(0xFF000000),
         ),
         hintStyle: mobileTextStyle.copyWith(
-          color: const Color.fromRGBO(120, 120,120, 1),
+          color: const Color.fromRGBO(120, 120, 120, 1),
         ),
       ),
       tablet: _BaseSearchBar(

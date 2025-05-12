@@ -13,6 +13,6 @@ final class HomeTextChanged extends HomeEvent {
 
   final String sourceText;
 
-    @override
+  @override
   List<Object?> get props => [sourceText];
 }

@@ -8,6 +8,7 @@ part 'translator_details.g.dart';
 enum Translator {
   google,
   baidu,
+  deepSeek,
 }
 
 typedef TranslatorApiKeys = Map<String, String>;

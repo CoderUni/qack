@@ -77,6 +77,9 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
   /// [TextEditingController] for Baidu Secret Key
   late final TextEditingController baiduSecretKeyController;
 
+  /// [TextEditingController] for DeepSeek API Key
+  late final TextEditingController deepSeekApiKeyController;
+
   @override
   void initState() {
     final apiKeys =
@@ -95,6 +98,10 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
       text: apiKeys?[KeyNameConstants.baiduSecretKey],
     );
 
+    deepSeekApiKeyController = TextEditingController(
+      text: apiKeys?[KeyNameConstants.deepSeek],
+    );
+
     super.initState();
   }
 
@@ -104,6 +111,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
     googleApiKeyController.dispose();
     baiduAppIDController.dispose();
     baiduSecretKeyController.dispose();
+    deepSeekApiKeyController.dispose();
     super.dispose();
   }
 
@@ -142,6 +150,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                       googleApiKey: googleApiKeyController.text.trim(),
                       baiduAppID: baiduAppIDController.text.trim(),
                       baiduSecretKey: baiduSecretKeyController.text.trim(),
+                      deepSeekApiKey: deepSeekApiKeyController.text.trim(),
                     ),
                   );
             },
@@ -158,6 +167,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                 delegate: SliverChildListDelegate(
                   [
                     Gap(widget.dividerSpacing * 3),
+                    // TODO: Translate this into a reusable stateless widget
                     Row(
                       children: [
                         Text(
@@ -205,7 +215,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                               ),
                             ),
                           ),
-                          labelText: 'Google Translate',
+                          labelText: 'Google Translate API Key',
                           // Validate google API key only if the
                           // Google translator is enabled
                           validator: state[Translator.google] != true
@@ -285,6 +295,64 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                           // Validate baidu access key only if the Baidu
                           // translator is enabled
                           validator: state[Translator.baidu] != true
+                              ? (value) => null
+                              : null,
+                        );
+                      },
+                    ),
+
+                    Gap(widget.dividerSpacing * 3),
+                    Row(
+                      children: [
+                        Text(
+                          'DeepSeek',
+                          style: widget.titleTextStyle,
+                        ),
+                        const Spacer(),
+                        BlocBuilder<EnableTranslatorCubit,
+                            Map<Translator, bool>>(
+                          buildWhen: (previous, current) =>
+                              previous[Translator.google] !=
+                              current[Translator.google],
+                          builder: (context, state) {
+                            return AppSwitch(
+                              value: state[Translator.google] ?? false,
+                              onChanged: (value) => context
+                                  .read<EnableTranslatorCubit>()
+                                  .toggleTranslator(
+                                    translator: Translator.deepSeek,
+                                    value: value,
+                                  ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Gap(widget.dividerSpacing),
+                    BlocBuilder<EnableTranslatorCubit, Map<Translator, bool>>(
+                      buildWhen: (previous, current) =>
+                          previous[Translator.deepSeek] !=
+                          current[Translator.deepSeek],
+                      builder: (context, state) {
+                        return InputText(
+                          controller: deepSeekApiKeyController,
+                          maxLength: 100,
+                          prefixIcon: const SizedBox(
+                            height: 48,
+                            width: 48,
+                            child: Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SvgPicture(
+                                AssetBytesLoader(
+                                  'assets/images/deepseek_icon.svg.vec',
+                                ),
+                              ),
+                            ),
+                          ),
+                          labelText: 'DeepSeek API Key',
+                          // Validate google API key only if the
+                          // Google translator is enabled
+                          validator: state[Translator.deepSeek] != true
                               ? (value) => null
                               : null,
                         );

@@ -25,4 +25,5 @@ Map<String, dynamic> _$TranslatorDetailsToJson(_TranslatorDetails instance) =>
 const _$TranslatorEnumMap = {
   Translator.google: 'google',
   Translator.baidu: 'baidu',
+  Translator.deepSeek: 'deepSeek',
 };

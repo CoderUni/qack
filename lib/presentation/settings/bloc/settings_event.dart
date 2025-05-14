@@ -4,7 +4,7 @@ sealed class SettingsEvent extends Equatable {
   const SettingsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 final class SettingsFetch extends SettingsEvent {
@@ -18,6 +18,7 @@ final class SettingsEditTranslator extends SettingsEvent {
     required this.googleApiKey,
     required this.baiduAppID,
     required this.baiduSecretKey,
+    required this.deepSeekApiKey,
   });
 
   final GlobalKey<FormState> formKey;
@@ -31,6 +32,16 @@ final class SettingsEditTranslator extends SettingsEvent {
   final String? baiduAppID;
   final String? baiduSecretKey;
 
+  // DeepSeek api keys
+  final String? deepSeekApiKey;
+
   @override
-  List<Object> get props => [enabledTranslators];
+  List<Object?> get props => [
+        formKey,
+        enabledTranslators,
+        googleApiKey,
+        baiduAppID,
+        baiduSecretKey,
+        deepSeekApiKey,
+      ];
 }

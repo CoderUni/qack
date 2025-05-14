@@ -43,6 +43,10 @@ final class HomeRepository {
 
             translationDetails[translator.name] = baiduTranslation;
           }
+        case Translator.deepSeek:
+          if (apiKeys[KeyNameConstants.deepSeek] != null) {
+            // TODO: Implement Deepseek translation
+          }
       }
     }
 

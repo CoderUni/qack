@@ -22,6 +22,12 @@ class $AssetsImagesGen {
   /// File path: assets/images/baidu_icon.svg.vec
   String get baiduIconSvg => 'assets/images/baidu_icon.svg.vec';
 
+  /// File path: assets/images/deepseek_icon.svg
+  String get deepseekIcon => 'assets/images/deepseek_icon.svg';
+
+  /// File path: assets/images/deepseek_icon.svg.vec
+  String get deepseekIconSvg => 'assets/images/deepseek_icon.svg.vec';
+
   /// File path: assets/images/google_icon.svg
   String get googleIcon => 'assets/images/google_icon.svg';
 
@@ -36,6 +42,8 @@ class $AssetsImagesGen {
   List<dynamic> get values => [
     baiduIcon,
     baiduIconSvg,
+    deepseekIcon,
+    deepseekIconSvg,
     googleIcon,
     googleIconSvg,
     pageNotFound,

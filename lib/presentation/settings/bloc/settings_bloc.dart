@@ -56,6 +56,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         // Baidu api keys
         KeyNameConstants.baiduAppID: event.baiduAppID ?? '',
         KeyNameConstants.baiduSecretKey: event.baiduSecretKey ?? '',
+        KeyNameConstants.deepSeek: event.deepSeekApiKey ?? '',
       };
 
       final translatorSettings = TranslatorSettings(

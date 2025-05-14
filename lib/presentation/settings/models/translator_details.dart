@@ -5,16 +5,18 @@ part 'translator_details.g.dart';
 
 // Once set, don't change the values since it will mess up the existing saved
 // data in the secure storage.
-enum TranslatorApp {
+enum Translator {
   google,
   baidu,
 }
 
+typedef TranslatorApiKeys = Map<String, String>;
+
 @freezed
 abstract class TranslatorSettings with _$TranslatorSettings {
   factory TranslatorSettings({
-    required List<TranslatorApp> enabledTranslators,
-    required Map<String, String> apiKeys,
+    required List<Translator> enabledTranslators,
+    required TranslatorApiKeys apiKeys,
   }) = _TranslatorDetails;
 
   factory TranslatorSettings.fromJson(Map<String, dynamic> json) =>

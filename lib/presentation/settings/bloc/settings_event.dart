@@ -22,7 +22,7 @@ final class SettingsEditTranslator extends SettingsEvent {
 
   final GlobalKey<FormState> formKey;
 
-  final List<TranslatorApp> enabledTranslators;
+  final List<Translator> enabledTranslators;
 
   // Google api keys
   final String? googleApiKey;

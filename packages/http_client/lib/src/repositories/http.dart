@@ -53,9 +53,27 @@ class Http {
   /// Performs a GET request to the specified [path] with the given [data].
   /// Returns the response from the server.
   /// Throws an [HttpException] if the request fails.
-  Future<Response> get(String path, Map<String, dynamic> data) async {
+  Future<Response> get(
+    String path,
+    Map<String, dynamic> data,
+  ) async {
     try {
-      return await _dio.get(path, queryParameters: data);
+      return await _dio.get(path, data: data);
+    } on DioException catch (e) {
+      // TODO: Show info dialog "Can't connect to webserver" if it's TimedOutException
+      // Decide if we have a listener for ApiException in root and show dialog from there
+      throw _mapDioErrorToException(e);
+    }
+  }
+
+  /// Performs a RAW GET request to the specified [path] with the given [data].
+  /// Returns the response from the server.
+  /// Throws an [HttpException] if the request fails.
+  Future<Response> rawGet(
+    Uri uri,
+  ) async {
+    try {
+      return await _dio.getUri(uri);
     } on DioException catch (e) {
       // TODO: Show info dialog "Can't connect to webserver" if it's TimedOutException
       // Decide if we have a listener for ApiException in root and show dialog from there

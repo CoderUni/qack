@@ -18,8 +18,8 @@ TranslatorSettings _$TranslatorSettingsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TranslatorSettings {
-  List<TranslatorApp> get enabledTranslators;
-  Map<String, String> get apiKeys;
+  List<Translator> get enabledTranslators;
+  TranslatorApiKeys get apiKeys;
 
   /// Create a copy of TranslatorSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -61,8 +61,7 @@ abstract mixin class $TranslatorSettingsCopyWith<$Res> {
           TranslatorSettings value, $Res Function(TranslatorSettings) _then) =
       _$TranslatorSettingsCopyWithImpl;
   @useResult
-  $Res call(
-      {List<TranslatorApp> enabledTranslators, Map<String, String> apiKeys});
+  $Res call({List<Translator> enabledTranslators, TranslatorApiKeys apiKeys});
 }
 
 /// @nodoc
@@ -85,11 +84,11 @@ class _$TranslatorSettingsCopyWithImpl<$Res>
       enabledTranslators: null == enabledTranslators
           ? _self.enabledTranslators
           : enabledTranslators // ignore: cast_nullable_to_non_nullable
-              as List<TranslatorApp>,
+              as List<Translator>,
       apiKeys: null == apiKeys
           ? _self.apiKeys
           : apiKeys // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>,
+              as TranslatorApiKeys,
     ));
   }
 }
@@ -98,25 +97,25 @@ class _$TranslatorSettingsCopyWithImpl<$Res>
 @JsonSerializable()
 class _TranslatorDetails implements TranslatorSettings {
   _TranslatorDetails(
-      {required final List<TranslatorApp> enabledTranslators,
-      required final Map<String, String> apiKeys})
+      {required final List<Translator> enabledTranslators,
+      required final TranslatorApiKeys apiKeys})
       : _enabledTranslators = enabledTranslators,
         _apiKeys = apiKeys;
   factory _TranslatorDetails.fromJson(Map<String, dynamic> json) =>
       _$TranslatorDetailsFromJson(json);
 
-  final List<TranslatorApp> _enabledTranslators;
+  final List<Translator> _enabledTranslators;
   @override
-  List<TranslatorApp> get enabledTranslators {
+  List<Translator> get enabledTranslators {
     if (_enabledTranslators is EqualUnmodifiableListView)
       return _enabledTranslators;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_enabledTranslators);
   }
 
-  final Map<String, String> _apiKeys;
+  final TranslatorApiKeys _apiKeys;
   @override
-  Map<String, String> get apiKeys {
+  TranslatorApiKeys get apiKeys {
     if (_apiKeys is EqualUnmodifiableMapView) return _apiKeys;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_apiKeys);
@@ -168,8 +167,7 @@ abstract mixin class _$TranslatorDetailsCopyWith<$Res>
       __$TranslatorDetailsCopyWithImpl;
   @override
   @useResult
-  $Res call(
-      {List<TranslatorApp> enabledTranslators, Map<String, String> apiKeys});
+  $Res call({List<Translator> enabledTranslators, TranslatorApiKeys apiKeys});
 }
 
 /// @nodoc
@@ -192,11 +190,11 @@ class __$TranslatorDetailsCopyWithImpl<$Res>
       enabledTranslators: null == enabledTranslators
           ? _self._enabledTranslators
           : enabledTranslators // ignore: cast_nullable_to_non_nullable
-              as List<TranslatorApp>,
+              as List<Translator>,
       apiKeys: null == apiKeys
           ? _self._apiKeys
           : apiKeys // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>,
+              as TranslatorApiKeys,
     ));
   }
 }

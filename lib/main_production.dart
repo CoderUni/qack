@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/app/view/app.dart';
 import 'package:qack/bootstrap.dart';
+import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
@@ -16,8 +17,14 @@ Future<void> main() async {
         ..dsn = dotenv.env['sentryLink'];
     },
     appRunner: () async {
-      await bootstrap((FlutterSecureStorage secureStorage) async {
-        return App(secureStorage: secureStorage);
+      await bootstrap((
+        FlutterSecureStorage secureStorage,
+        SettingsBloc settingsBloc,
+      ) async {
+        return App(
+          secureStorage: secureStorage,
+          settingsBloc: settingsBloc,
+        );
       });
     },
   );

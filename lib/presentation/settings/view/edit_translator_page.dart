@@ -166,17 +166,17 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         ),
                         const Spacer(),
                         BlocBuilder<EnableTranslatorCubit,
-                            Map<TranslatorApp, bool>>(
+                            Map<Translator, bool>>(
                           buildWhen: (previous, current) =>
-                              previous[TranslatorApp.google] !=
-                              current[TranslatorApp.google],
+                              previous[Translator.google] !=
+                              current[Translator.google],
                           builder: (context, state) {
                             return AppSwitch(
-                              value: state[TranslatorApp.google] ?? false,
+                              value: state[Translator.google] ?? false,
                               onChanged: (value) => context
                                   .read<EnableTranslatorCubit>()
                                   .toggleTranslator(
-                                    translator: TranslatorApp.google,
+                                    translator: Translator.google,
                                     value: value,
                                   ),
                             );
@@ -185,11 +185,10 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                       ],
                     ),
                     Gap(widget.dividerSpacing),
-                    BlocBuilder<EnableTranslatorCubit,
-                        Map<TranslatorApp, bool>>(
+                    BlocBuilder<EnableTranslatorCubit, Map<Translator, bool>>(
                       buildWhen: (previous, current) =>
-                          previous[TranslatorApp.google] !=
-                          current[TranslatorApp.google],
+                          previous[Translator.google] !=
+                          current[Translator.google],
                       builder: (context, state) {
                         return InputText(
                           controller: googleApiKeyController,
@@ -209,7 +208,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                           labelText: 'Google Translate',
                           // Validate google API key only if the
                           // Google translator is enabled
-                          validator: state[TranslatorApp.google] != true
+                          validator: state[Translator.google] != true
                               ? (value) => null
                               : null,
                         );
@@ -224,17 +223,17 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         ),
                         const Spacer(),
                         BlocBuilder<EnableTranslatorCubit,
-                            Map<TranslatorApp, bool>>(
+                            Map<Translator, bool>>(
                           buildWhen: (previous, current) =>
-                              previous[TranslatorApp.baidu] !=
-                              current[TranslatorApp.baidu],
+                              previous[Translator.baidu] !=
+                              current[Translator.baidu],
                           builder: (context, state) {
                             return AppSwitch(
-                              value: state[TranslatorApp.baidu] ?? false,
+                              value: state[Translator.baidu] ?? false,
                               onChanged: (value) => context
                                   .read<EnableTranslatorCubit>()
                                   .toggleTranslator(
-                                    translator: TranslatorApp.baidu,
+                                    translator: Translator.baidu,
                                     value: value,
                                   ),
                             );
@@ -243,11 +242,10 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                       ],
                     ),
                     Gap(widget.dividerSpacing),
-                    BlocBuilder<EnableTranslatorCubit,
-                        Map<TranslatorApp, bool>>(
+                    BlocBuilder<EnableTranslatorCubit, Map<Translator, bool>>(
                       buildWhen: (previous, current) =>
-                          previous[TranslatorApp.baidu] !=
-                          current[TranslatorApp.baidu],
+                          previous[Translator.baidu] !=
+                          current[Translator.baidu],
                       builder: (context, state) {
                         return InputText(
                           controller: baiduAppIDController,
@@ -267,18 +265,17 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                           ),
                           // Validate baidu app ID only if the Baidu
                           // translator is enabled
-                          validator: state[TranslatorApp.baidu] != true
+                          validator: state[Translator.baidu] != true
                               ? (value) => null
                               : null,
                         );
                       },
                     ),
                     Gap(widget.inputTextSpacing),
-                    BlocBuilder<EnableTranslatorCubit,
-                        Map<TranslatorApp, bool>>(
+                    BlocBuilder<EnableTranslatorCubit, Map<Translator, bool>>(
                       buildWhen: (previous, current) =>
-                          previous[TranslatorApp.baidu] !=
-                          current[TranslatorApp.baidu],
+                          previous[Translator.baidu] !=
+                          current[Translator.baidu],
                       builder: (context, state) {
                         return InputText(
                           controller: baiduSecretKeyController,
@@ -287,7 +284,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                           prefixIcon: const Icon(Icons.lock),
                           // Validate baidu access key only if the Baidu
                           // translator is enabled
-                          validator: state[TranslatorApp.baidu] != true
+                          validator: state[Translator.baidu] != true
                               ? (value) => null
                               : null,
                         );

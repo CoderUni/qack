@@ -34,6 +34,9 @@ dependencies:
   vector_graphics: ^1.1.18
   freezed_annotation: ^3.0.0
   json_serializable: ^6.9.5
+  crypto: ^3.0.6
+  bloc_concurrency: ^0.2.5
+  rxdart: ^0.28.0
 
 
 dev_dependencies:

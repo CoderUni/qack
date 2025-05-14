@@ -6,6 +6,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
+import 'package:qack/constants/key_name_constants.dart';
+import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
+import 'package:qack/presentation/settings/respository/settings_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -26,8 +30,10 @@ class AppBlocObserver extends BlocObserver {
 Future<void> bootstrap(
   FutureOr<Widget> Function(
     FlutterSecureStorage secureStorage,
+    SettingsBloc settingsBloc,
   ) builder,
 ) async {
+  SentryWidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
     // TODO: Add Sentry error reporting
     /*
@@ -46,10 +52,25 @@ Future<void> bootstrap(
   // Initialize secure storage
   const secureStorage = FlutterSecureStorage();
 
+  // Create a random salt if it doesn't exist.
+  final salt = await secureStorage.read(key: KeyNameConstants.md5Salt);
+  if (salt == null || salt.isEmpty) {
+    // Create a random salt and store it in secure storage
+    await secureStorage.write(
+      key: KeyNameConstants.md5Salt,
+      value: DateTime.now().millisecondsSinceEpoch.toString(),
+    );
+  }
+
+  // Initialize settings bloc
+  final settingsBloc = SettingsBloc(
+    settingsRepository: SettingsRepository(storage: secureStorage),
+  );
+
   // Initialize HTTP repository
   GetIt.instance.registerLazySingleton<Http>(Http.new);
 
   Bloc.observer = const AppBlocObserver();
 
-  runApp(await builder(secureStorage));
+  runApp(await builder(secureStorage, settingsBloc));
 }

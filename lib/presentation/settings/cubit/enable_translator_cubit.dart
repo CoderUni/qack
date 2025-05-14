@@ -1,20 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:qack/presentation/settings/models/translator_details.dart';
 
-class EnableTranslatorCubit extends Cubit<Map<TranslatorApp, bool>> {
-  EnableTranslatorCubit(List<TranslatorApp>? enabledTranslators)
+class EnableTranslatorCubit extends Cubit<Map<Translator, bool>> {
+  EnableTranslatorCubit(List<Translator>? enabledTranslators)
       : super({
-          for (final translator in TranslatorApp.values)
+          for (final translator in Translator.values)
             // Check if the translator is in the list of enabled translators
             translator: enabledTranslators != null &&
                 enabledTranslators.contains(translator),
         });
 
   void toggleTranslator({
-    required TranslatorApp translator,
+    required Translator translator,
     required bool value,
   }) {
-    final currentState = Map<TranslatorApp, bool>.from(state);
+    final currentState = Map<Translator, bool>.from(state);
     currentState[translator] = value;
 
     emit(currentState);

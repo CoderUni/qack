@@ -1,13 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:qack/layout/layout_handler.dart';
+import 'package:qack/layout/layout.dart';
+import 'package:qack/theme/theme.dart';
 
 class AppSearchBar extends StatelessWidget {
   const AppSearchBar({
     super.key,
     this.onChanged,
-    this.hintText = 'What would you like to search for?',
+    this.hintText = 'Search Term',
     this.margin,
   });
 
@@ -22,17 +24,7 @@ class AppSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const mobileTextStyle = TextStyle(
-      fontSize: 16,
-      letterSpacing: 0,
-      fontWeight: FontWeight.w500,
-    );
-
-    const tabletTextStyle = TextStyle(
-      fontSize: 18,
-      letterSpacing: 0,
-      fontWeight: FontWeight.w500,
-    );
+    const theme = LightTheme();
 
     return LayoutHandler(
       mobile: _BaseSearchBar(
@@ -41,11 +33,11 @@ class AppSearchBar extends StatelessWidget {
         contentSpacing: 8,
         onChanged: onChanged,
         hintText: hintText,
-        textStyle: mobileTextStyle.copyWith(
-          color: const Color(0xFF000000),
+        textStyle: AppTextStyle.textMD.medium.copyWith(
+          color: theme.textColor1,
         ),
-        hintStyle: mobileTextStyle.copyWith(
-          color: const Color.fromRGBO(120, 120, 120, 1),
+        hintStyle: AppTextStyle.textMD.medium.copyWith(
+          color: theme.searchBarThemeData.hintColor,
         ),
       ),
       tablet: _BaseSearchBar(
@@ -54,11 +46,11 @@ class AppSearchBar extends StatelessWidget {
         contentSpacing: 16,
         onChanged: onChanged,
         hintText: hintText,
-        textStyle: tabletTextStyle.copyWith(
-          color: const Color(0xFF000000),
+        textStyle: AppTextStyle.textLG.medium.copyWith(
+          color: theme.textColor1,
         ),
-        hintStyle: tabletTextStyle.copyWith(
-          color: const Color.fromRGBO(220, 220, 220, 1),
+        hintStyle: AppTextStyle.textLG.medium.copyWith(
+          color: theme.searchBarThemeData.hintColor,
         ),
       ),
     );
@@ -107,6 +99,8 @@ class _BaseSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const theme = LightTheme();
+
     return Padding(
       padding: margin,
       child: DecoratedBox(
@@ -114,16 +108,16 @@ class _BaseSearchBar extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
-          color: Colors.white.withValues(alpha: 0.35),
+          color: theme.searchBarThemeData.backgroundColor,
         ),
         child: Padding(
           padding: padding,
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 EvaIcons.search,
                 size: 24,
-                color: Color(0xFF4E4E4E),
+                color: theme.searchBarThemeData.iconColor,
               ),
               Gap(contentSpacing),
               Expanded(

@@ -1,20 +1,11 @@
 part of 'home_bloc.dart';
 
-enum HomeMethod {
-  initial,
-  homeLoad,
-}
-
-enum HomeStatus {
-  initial,
-  loading,
-  success,
-  error,
-}
-
 @immutable
-sealed class HomeState {
+sealed class HomeState extends Equatable {
   const HomeState();
+
+  @override
+  List<Object?> get props => [];
 }
 
 final class HomeInitial extends HomeState {
@@ -25,13 +16,23 @@ final class HomeTextTranslateLoading extends HomeState {
   const HomeTextTranslateLoading();
 }
 
-final class HomeTextTranslateSuccess extends HomeState {
-  const HomeTextTranslateSuccess({required this.translatedText});
+final class HomeTextStateEmpty extends HomeState {
+  const HomeTextStateEmpty();
+}
 
-  final String translatedText;
+final class HomeTextTranslateSuccess extends HomeState {
+  const HomeTextTranslateSuccess({required this.translationDetails});
+
+  final TranslationDetails translationDetails;
+
+  @override
+  List<Object> get props => [translationDetails];
 }
 
 final class HomeTextTranslateError extends HomeState {
   const HomeTextTranslateError({required this.exception});
   final Exception exception;
+
+  @override
+  List<Object?> get props => [exception];
 }

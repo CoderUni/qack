@@ -18,7 +18,7 @@ abstract class BaseTranslationDetails extends Equatable {
   final String? srcLanguage;
 
   /// Language code of the target text
-  final String targetLanguage;
+  final String? targetLanguage;
 
   /// {@macro translated_text}
   final TranslatedText translatedText;

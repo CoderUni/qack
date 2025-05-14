@@ -14,5 +14,10 @@ abstract class LinkConstants {
   static const String baiduTranslateBaseUrl = 'https://api.fanyi.baidu.com/api';
 
   /// Translation Endpoint for the Baidu Translate API
-  static const String baiduTranslateTranslationUrl= '$baiduTranslateBaseUrl/trans/vip/translate';
+  static const String baiduTranslateTranslationUrl =
+      '$baiduTranslateBaseUrl/trans/vip/translate';
+
+  static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';
+
+  static const String deepSeekChatCompletionUrl = '$deepSeekBaseUrl/chat/completions';
 }

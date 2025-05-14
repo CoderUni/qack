@@ -29,11 +29,9 @@ class HomePage extends StatelessWidget {
                     // 6000 characters for baidu
                     validator: (_) => null,
                     onChanged: (text) {
-                      if (text.trim().isNotEmpty) {
-                        context
-                            .read<HomeBloc>()
-                            .add(HomeTextChanged(sourceText: text));
-                      }
+                      context
+                          .read<HomeBloc>()
+                          .add(HomeTextChanged(sourceText: text));
                     },
                   ),
                   BlocBuilder<HomeBloc, HomeState>(

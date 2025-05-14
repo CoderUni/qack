@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -17,7 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }) : super(const HomeInitial()) {
     on<HomeTextChanged>(
       _onHomeTextChanged,
-      transformer: debounce(const Duration(milliseconds: 500)),
+      transformer: restartableDebounce(const Duration(milliseconds: 500)),
     );
   }
 
@@ -58,6 +59,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 }
 
-EventTransformer<T> debounce<T>(Duration duration) {
-  return (events, mapper) => events.debounceTime(duration).flatMap(mapper);
+EventTransformer<T> restartableDebounce<T>(Duration duration) {
+  return (events, mapper) =>
+      restartable<T>().call(events.debounceTime(duration), mapper);
 }

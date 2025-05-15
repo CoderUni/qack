@@ -35,21 +35,16 @@ final class DeepseekChatCompletion extends BaseTranslationDetails {
     required this.model,
     required this.systemFingerprint,
     required this.usage,
-    this.prompt,
   }) : super(
           srcLanguage: 'auto',
           targetLanguage: 'auto',
           translatedText: TranslatedText(
-            inputText: prompt!,
-            outputText: choices[0].message.content,
+            outputText: choices[0].message.content ?? 'Error',
           ),
         );
 
   factory DeepseekChatCompletion.fromJson(Map<String, dynamic> json) =>
       _$DeepseekChatCompletionFromJson(json);
-
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  final String? prompt;
 
   @JsonKey(name: 'id', includeToJson: false)
   final String id;
@@ -96,7 +91,7 @@ final class DeepSeekChoice extends Equatable {
   final int index;
 
   @JsonKey(name: 'message')
-  final DeepSeekMessage message;
+  final DeepSeekChatResponseMessage message;
 
   @JsonKey(name: 'logprobs')
   final DeepSeekLogProbs? logprobs;
@@ -140,7 +135,7 @@ final class DeepSeekUsage extends Equatable {
     required this.promptCacheHitTokens,
     required this.promptCacheMissTokens,
     required this.totalTokens,
-    required this.completionTokensDetails,
+    this.completionTokensDetails,
   });
 
   factory DeepSeekUsage.fromJson(Map<String, dynamic> json) =>
@@ -161,8 +156,8 @@ final class DeepSeekUsage extends Equatable {
   @JsonKey(name: 'total_tokens')
   final int totalTokens;
 
-  @JsonKey(name: 'completion_tokens_details')
-  final DeepSeekCompletionTokensDetails completionTokensDetails;
+  @JsonKey(name: 'completion_tokens_details', includeIfNull: false)
+  final DeepSeekCompletionTokensDetails? completionTokensDetails;
 
   Map<String, dynamic> toJson() => _$DeepSeekUsageToJson(this);
 
@@ -246,21 +241,22 @@ final class DeepSeekChatCompletionRequest extends Equatable {
 }
 
 class _ResponseFormatSerializer
-    implements JsonConverter<DeepSeekResponseFormat, String> {
+    implements JsonConverter<DeepSeekResponseFormat, Map<String, dynamic>> {
   const _ResponseFormatSerializer();
 
   /// This should not be implemented since the fromJson method is not used
   /// in [DeepSeekChatCompletionRequest].
   @override
-  DeepSeekResponseFormat fromJson(String json) => throw UnimplementedError();
+  DeepSeekResponseFormat fromJson(Map<String, dynamic> json) =>
+      throw UnimplementedError();
 
   @override
-  String toJson(DeepSeekResponseFormat object) {
+  Map<String, dynamic> toJson(DeepSeekResponseFormat object) {
     switch (object) {
       case DeepSeekResponseFormat.string:
-        return json.encode({'type': 'text'});
+        return {'type': 'text'};
       case DeepSeekResponseFormat.json:
-        return json.encode({'type': 'json_object'});
+        return {'type': 'json_object'};
     }
   }
 }

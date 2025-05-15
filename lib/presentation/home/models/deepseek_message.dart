@@ -29,7 +29,7 @@ final class DeepSeekMessage extends Equatable {
 final class DeepSeekSystemMessage extends DeepSeekMessage {
   const DeepSeekSystemMessage({
     required this.sContent,
-    required this.sRole,
+    this.sRole = 'system',
     this.name,
   }) : super(
           content: sContent,
@@ -52,15 +52,15 @@ final class DeepSeekSystemMessage extends DeepSeekMessage {
   Map<String, dynamic> toJson() => _$DeepSeekSystemMessageToJson(this);
 
   @override
-  List<Object?> get props => [content, role, name];
+  List<Object?> get props => [sContent, sRole, name];
 }
 
 @JsonSerializable()
 final class DeepSeekUserMessage extends DeepSeekMessage {
   const DeepSeekUserMessage({
     required this.uContent,
-    required this.uRole,
     this.name,
+    this.uRole = 'user',
   }) : super(
           content: uContent,
           role: uRole,
@@ -72,24 +72,24 @@ final class DeepSeekUserMessage extends DeepSeekMessage {
   @JsonKey(name: 'content')
   final String uContent;
 
-  @JsonKey(name: 'role')
-  final String uRole;
-
   @JsonKey(name: 'name')
   final String? name;
+
+  @JsonKey(name: 'role')
+  final String uRole;
 
   @override
   Map<String, dynamic> toJson() => _$DeepSeekUserMessageToJson(this);
 
   @override
-  List<Object?> get props => [content, role, name];
+  List<Object?> get props => [uContent, uRole, name];
 }
 
 @JsonSerializable()
 final class DeepSeekAssistantMessage extends DeepSeekMessage {
   const DeepSeekAssistantMessage({
     required this.aContent,
-    required this.aRole,
+    this.aRole = 'assistant',
     this.name,
     this.prefix,
     this.reasoningContent,
@@ -120,7 +120,7 @@ final class DeepSeekAssistantMessage extends DeepSeekMessage {
   Map<String, dynamic> toJson() => _$DeepSeekAssistantMessageToJson(this);
 
   @override
-  List<Object?> get props => [aContent, aRole, name, prefix, reasoningContent];
+  List<Object?> get props => [content, aRole, name, prefix, reasoningContent];
 }
 
 /// [DeepSeekChatResponseMessage] is a class that represents a message in a chat
@@ -144,8 +144,8 @@ final class DeepSeekChatResponseMessage extends Equatable {
   @JsonKey(name: 'reasoning_content')
   final String? reasoningContent;
 
-  @JsonKey(name: 'tool_calls')
-  final List<DeepSeekToolCall> toolCalls;
+  @JsonKey(name: 'tool_calls',includeIfNull: false)
+  final List<DeepSeekToolCall>? toolCalls;
 
   @JsonKey(name: 'role')
   final String role;

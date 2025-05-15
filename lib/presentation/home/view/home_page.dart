@@ -47,9 +47,15 @@ class HomePage extends StatelessWidget {
                             'Translating...',
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        HomeTextTranslateSuccess() => Text(
-                            state.translationDetails.entries.first.value
-                                .translatedText.outputText,
+                        HomeTextTranslateSuccess() => Column(
+                            children: state.translationDetails.entries
+                                .map(
+                                  (entry) => Text(
+                                    entry.value
+                                        .translatedText.outputText,
+                                  ),
+                                )
+                                .toList(),
                           ),
                         HomeTextTranslateError() => const Text('Error'),
                       };

@@ -22,7 +22,7 @@ DeepSeekSystemMessage _$DeepSeekSystemMessageFromJson(
         Map<String, dynamic> json) =>
     DeepSeekSystemMessage(
       sContent: json['content'] as String,
-      sRole: json['role'] as String,
+      sRole: json['role'] as String? ?? 'system',
       name: json['name'] as String?,
     );
 
@@ -37,23 +37,23 @@ Map<String, dynamic> _$DeepSeekSystemMessageToJson(
 DeepSeekUserMessage _$DeepSeekUserMessageFromJson(Map<String, dynamic> json) =>
     DeepSeekUserMessage(
       uContent: json['content'] as String,
-      uRole: json['role'] as String,
       name: json['name'] as String?,
+      uRole: json['role'] as String? ?? 'user',
     );
 
 Map<String, dynamic> _$DeepSeekUserMessageToJson(
         DeepSeekUserMessage instance) =>
     <String, dynamic>{
       'content': instance.uContent,
-      'role': instance.uRole,
       'name': instance.name,
+      'role': instance.uRole,
     };
 
 DeepSeekAssistantMessage _$DeepSeekAssistantMessageFromJson(
         Map<String, dynamic> json) =>
     DeepSeekAssistantMessage(
       aContent: json['content'] as String,
-      aRole: json['role'] as String,
+      aRole: json['role'] as String? ?? 'assistant',
       name: json['name'] as String?,
       prefix: json['prefix'] as bool?,
       reasoningContent: json['reasoning_content'] as String?,
@@ -73,8 +73,8 @@ DeepSeekChatResponseMessage _$DeepSeekChatResponseMessageFromJson(
         Map<String, dynamic> json) =>
     DeepSeekChatResponseMessage(
       content: json['content'] as String?,
-      toolCalls: (json['tool_calls'] as List<dynamic>)
-          .map((e) => DeepSeekToolCall.fromJson(e as Map<String, dynamic>))
+      toolCalls: (json['tool_calls'] as List<dynamic>?)
+          ?.map((e) => DeepSeekToolCall.fromJson(e as Map<String, dynamic>))
           .toList(),
       role: json['role'] as String,
       reasoningContent: json['reasoning_content'] as String?,
@@ -85,7 +85,7 @@ Map<String, dynamic> _$DeepSeekChatResponseMessageToJson(
     <String, dynamic>{
       'content': instance.content,
       'reasoning_content': instance.reasoningContent,
-      'tool_calls': instance.toolCalls,
+      if (instance.toolCalls case final value?) 'tool_calls': value,
       'role': instance.role,
     };
 

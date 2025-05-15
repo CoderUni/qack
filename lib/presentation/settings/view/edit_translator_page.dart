@@ -312,11 +312,11 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         BlocBuilder<EnableTranslatorCubit,
                             Map<Translator, bool>>(
                           buildWhen: (previous, current) =>
-                              previous[Translator.google] !=
-                              current[Translator.google],
+                              previous[Translator.deepSeek] !=
+                              current[Translator.deepSeek],
                           builder: (context, state) {
                             return AppSwitch(
-                              value: state[Translator.google] ?? false,
+                              value: state[Translator.deepSeek] ?? false,
                               onChanged: (value) => context
                                   .read<EnableTranslatorCubit>()
                                   .toggleTranslator(
@@ -350,8 +350,8 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                             ),
                           ),
                           labelText: 'DeepSeek API Key',
-                          // Validate google API key only if the
-                          // Google translator is enabled
+                          // Validate Deepseek API key only if the
+                          // Deekseek is enabled
                           validator: state[Translator.deepSeek] != true
                               ? (value) => null
                               : null,

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
+import 'package:qack/constants/constants.dart';
 import 'package:qack/constants/key_name_constants.dart';
 import 'package:qack/constants/link_constants.dart';
 import 'package:qack/presentation/home/models/baidu_translation.dart';
 import 'package:qack/presentation/home/models/base_translation_details.dart';
+import 'package:qack/presentation/home/models/deepseek_chat_completion.dart';
+import 'package:qack/presentation/home/models/deepseek_message.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 
 final class HomeRepository {
@@ -45,7 +48,16 @@ final class HomeRepository {
           }
         case Translator.deepSeek:
           if (apiKeys[KeyNameConstants.deepSeek] != null) {
-            // TODO: Implement Deepseek translation
+            final deepSeekChatCompletion = await _askDeepseek(
+              text,
+              // src and target lang are manually set to auto
+              // in [DeepseekChatCompletion]
+              srcLanguage: srcLanguage,
+              targetLanguage: targetLanguage,
+              translatorSettings: translatorSettings,
+            );
+
+            translationDetails[translator.name] = deepSeekChatCompletion;
           }
       }
     }
@@ -111,5 +123,50 @@ final class HomeRepository {
     }
 
     return BaiduTranslation.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<DeepseekChatCompletion> _askDeepseek(
+    String inputText, {
+    required String srcLanguage,
+    required String targetLanguage,
+    required TranslatorSettings translatorSettings,
+  }) async {
+    final httpClient = GetIt.I<Http>();
+
+    final secretKey = translatorSettings.apiKeys[KeyNameConstants.deepSeek];
+
+    if (secretKey == null) {
+      throw ArgumentError(
+        'Deepseek secret key is null. SecretKey: $secretKey',
+      );
+    }
+
+    final deepseekCompletionRequest = DeepSeekChatCompletionRequest(
+      prompt: inputText,
+      model: DeepSeekModel.chat,
+      messages: [
+        DeepSeekUserMessage(
+          uContent:
+              'Translate to English if the text is in Chinese or vice versa. '
+              'Only translate and nothing else.'
+              ' $inputText',
+        ),
+      ],
+      responseFormat: DeepSeekResponseFormat.string,
+    );
+    
+    final response = await httpClient.post(
+      LinkConstants.deepSeekChatCompletionUrl,
+      deepseekCompletionRequest.toJson(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $secretKey',
+      },
+    );
+
+    return DeepseekChatCompletion.fromJson(
+      response.data as Map<String, dynamic>,
+    );
   }
 }

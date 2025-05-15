@@ -84,10 +84,24 @@ class Http {
   /// Performs a POST request to the specified [path] with the given [data].
   /// Returns the response from the server.
   /// Throws an [HttpException] if the request fails.
-  Future<Response> post(String path, Map<String, dynamic> data) async {
+  Future<Response> post(
+    String path,
+    Map<String, dynamic> data, {
+    Map<String, dynamic>? headers,
+  }) async {
     try {
-      return await _dio.post(path, data: data);
+      return await _dio.post(
+        path,
+        data: data,
+        options: Options(
+          headers: headers,
+        ),
+      );
     } on DioException catch (e) {
+      print('response:');
+      print(e.response);
+      print('msg:');
+      print(e.message);
       throw _mapDioErrorToException(e);
     }
   }

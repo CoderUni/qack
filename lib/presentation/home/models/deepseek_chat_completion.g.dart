@@ -30,8 +30,8 @@ DeepSeekChoice _$DeepSeekChoiceFromJson(Map<String, dynamic> json) =>
     DeepSeekChoice(
       finishReason: json['finish_reason'] as String,
       index: (json['index'] as num).toInt(),
-      message:
-          DeepSeekMessage.fromJson(json['message'] as Map<String, dynamic>),
+      message: DeepSeekChatResponseMessage.fromJson(
+          json['message'] as Map<String, dynamic>),
       logprobs: json['logprobs'] == null
           ? null
           : DeepSeekLogProbs.fromJson(json['logprobs'] as Map<String, dynamic>),
@@ -63,8 +63,10 @@ DeepSeekUsage _$DeepSeekUsageFromJson(Map<String, dynamic> json) =>
       promptCacheHitTokens: (json['prompt_cache_hit_tokens'] as num).toInt(),
       promptCacheMissTokens: (json['prompt_cache_miss_tokens'] as num).toInt(),
       totalTokens: (json['total_tokens'] as num).toInt(),
-      completionTokensDetails: DeepSeekCompletionTokensDetails.fromJson(
-          json['completion_tokens_details'] as Map<String, dynamic>),
+      completionTokensDetails: json['completion_tokens_details'] == null
+          ? null
+          : DeepSeekCompletionTokensDetails.fromJson(
+              json['completion_tokens_details'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DeepSeekUsageToJson(DeepSeekUsage instance) =>
@@ -74,7 +76,8 @@ Map<String, dynamic> _$DeepSeekUsageToJson(DeepSeekUsage instance) =>
       'prompt_cache_hit_tokens': instance.promptCacheHitTokens,
       'prompt_cache_miss_tokens': instance.promptCacheMissTokens,
       'total_tokens': instance.totalTokens,
-      'completion_tokens_details': instance.completionTokensDetails,
+      if (instance.completionTokensDetails case final value?)
+        'completion_tokens_details': value,
     };
 
 DeepSeekCompletionTokensDetails _$DeepSeekCompletionTokensDetailsFromJson(
@@ -98,7 +101,7 @@ DeepSeekChatCompletionRequest _$DeepSeekChatCompletionRequestFromJson(
           .map((e) => DeepSeekMessage.fromJson(e as Map<String, dynamic>))
           .toList(),
       responseFormat: const _ResponseFormatSerializer()
-          .fromJson(json['response_format'] as String),
+          .fromJson(json['response_format'] as Map<String, dynamic>),
       stream: json['stream'] as bool? ?? false,
       temperature: (json['temperature'] as num?)?.toDouble() ?? 1.3,
       logProbability: json['logprobs'] as bool? ?? true,

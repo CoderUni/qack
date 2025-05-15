@@ -49,12 +49,12 @@ abstract class BaseTranslationError extends Equatable implements Exception {
 final class TranslatedText extends Equatable {
   /// {@macro translated_text}
   const TranslatedText({
-    required this.inputText,
     required this.outputText,
+    this.inputText,
   });
 
   /// Input text to be translated
-  final String inputText;
+  final String? inputText;
 
   /// Translated text
   final String outputText;

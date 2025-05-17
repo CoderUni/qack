@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:isolate';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
@@ -17,16 +20,21 @@ final class HomeRepository {
   });
   final FlutterSecureStorage storage;
 
-  Future<TranslationDetails> translateText(
+  Stream<BaseTranslationDetails> translateText(
     String text, {
     required String srcLanguage,
     required String targetLanguage,
     required TranslatorSettings translatorSettings,
-  }) async {
+  }) async* {
     final enabledTranslators = translatorSettings.enabledTranslators;
     final apiKeys = translatorSettings.apiKeys;
 
-    final translationDetails = <String, BaseTranslationDetails>{};
+    final httpClient = GetIt.I<Http>();
+
+    // Definite the root isolate token
+    final rootIsolateToken = RootIsolateToken.instance!;
+
+    final futures = <Future<BaseTranslationDetails>>[];
 
     for (final translator in enabledTranslators) {
       switch (translator) {
@@ -37,41 +45,56 @@ final class HomeRepository {
         case Translator.baidu:
           if (apiKeys[KeyNameConstants.baiduAppID] != null &&
               apiKeys[KeyNameConstants.baiduSecretKey] != null) {
-            final baiduTranslation = await _translateBaidu(
-              text,
-              srcLanguage: srcLanguage,
-              targetLanguage: targetLanguage,
-              translatorSettings: translatorSettings,
+            futures.add(
+              Isolate.run(
+                () async => _translateBaidu(
+                  text,
+                  httpClient,
+                  rootIsolateToken,
+                  srcLanguage: srcLanguage,
+                  targetLanguage: targetLanguage,
+                  translatorSettings: translatorSettings,
+                ),
+              ),
             );
-
-            translationDetails[translator.name] = baiduTranslation;
           }
         case Translator.deepSeek:
           if (apiKeys[KeyNameConstants.deepSeek] != null) {
-            final deepSeekChatCompletion = await _askDeepseek(
-              text,
-              // src and target lang are manually set to auto
-              // in [DeepseekChatCompletion]
-              srcLanguage: srcLanguage,
-              targetLanguage: targetLanguage,
-              translatorSettings: translatorSettings,
+            futures.add(
+              Isolate.run(
+                () async => _askDeepseek(
+                  text,
+                  httpClient,
+                  rootIsolateToken,
+                  // src and target lang are manually set to auto
+                  // in [DeepseekChatCompletion]
+                  srcLanguage: srcLanguage,
+                  targetLanguage: targetLanguage,
+                  translatorSettings: translatorSettings,
+                ),
+              ),
             );
-
-            translationDetails[translator.name] = deepSeekChatCompletion;
           }
       }
     }
 
-    return translationDetails;
+    for (final future in futures) {
+      yield await future;
+    }
+
+    return;
   }
 
   Future<BaiduTranslation> _translateBaidu(
-    String inputText, {
+    String inputText,
+    Http httpClient,
+    RootIsolateToken rootIsolateToken, {
     required String srcLanguage,
     required String targetLanguage,
     required TranslatorSettings translatorSettings,
   }) async {
-    final httpClient = GetIt.I<Http>();
+    // Initialize platform channel plugins (like http) in the isolate
+    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
 
     final appID = translatorSettings.apiKeys[KeyNameConstants.baiduAppID];
     final secretKey =
@@ -126,12 +149,15 @@ final class HomeRepository {
   }
 
   Future<DeepseekChatCompletion> _askDeepseek(
-    String inputText, {
+    String inputText,
+    Http httpClient,
+    RootIsolateToken rootIsolateToken, {
     required String srcLanguage,
     required String targetLanguage,
     required TranslatorSettings translatorSettings,
   }) async {
-    final httpClient = GetIt.I<Http>();
+    // Initialize platform channel plugins (like http) in the isolate
+    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
 
     final secretKey = translatorSettings.apiKeys[KeyNameConstants.deepSeek];
 
@@ -147,14 +173,14 @@ final class HomeRepository {
       messages: [
         DeepSeekUserMessage(
           uContent:
-              'Translate to English if the text is in Chinese or vice versa. '
-              'Only translate and nothing else.'
+              'Translate to English or Chinese. '
+              'Only translate and do nothing else.'
               ' $inputText',
         ),
       ],
       responseFormat: DeepSeekResponseFormat.string,
     );
-    
+
     final response = await httpClient.post(
       LinkConstants.deepSeekChatCompletionUrl,
       deepseekCompletionRequest.toJson(),

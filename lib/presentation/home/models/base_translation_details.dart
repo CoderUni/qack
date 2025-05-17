@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:qack/presentation/home/models/models.dart';
 
 /// Contains all the enabled translators and their translated output.
 typedef TranslationDetails = Map<String, BaseTranslationDetails>;
@@ -61,4 +62,28 @@ final class TranslatedText extends Equatable {
 
   @override
   List<Object?> get props => [inputText, outputText];
+}
+
+extension BaseTranslationExtension on BaseTranslationDetails {
+  /// Returns the name of the translator
+  String get translatorName {
+    if (this is BaiduTranslation) {
+      return 'Baidu';
+    } else if (this is DeepseekChatCompletion) {
+      return 'Deepseek';
+    }
+    return 'Unknown';
+  }
+}
+
+extension BaseTranslationStringExtension on String{
+  /// Returns the name of the translator
+  String get translatorName {
+    if (this == 'Baidu') {
+      return 'Baidu';
+    } else if (this == 'Deepseek') {
+      return 'Deepseek';
+    }
+    return 'Unknown';
+  }
 }

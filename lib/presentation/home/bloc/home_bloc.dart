@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
@@ -44,14 +46,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       // and then change the target_lang to the other language
       // Set source_lang manually if the auto-detect is not good
 
-      final translationDetails = await homeRepository.translateText(
-        sourceText,
-        srcLanguage: 'auto',
-        targetLanguage: 'zh',
-        translatorSettings: settingsBloc.state.translatorSettings!,
-      );
+      await emit.forEach(
+        homeRepository.translateText(
+          sourceText,
+          srcLanguage: 'auto',
+          targetLanguage: 'zh',
+          translatorSettings: settingsBloc.state.translatorSettings!,
+        ),
+        onData: (baseTranslationDetail) {
+          final translationDetails = Map.of(state.translationDetails);
 
-      emit(HomeTextTranslateSuccess(translationDetails: translationDetails));
+          translationDetails[baseTranslationDetail.translatorName] =
+              baseTranslationDetail;
+
+          return HomeTextTranslateSuccess(translationDetails);
+        },
+        onError: (e, stackTrace) {
+          debugPrint('error: $e');
+          return HomeTextTranslateError(exception: Exception(e));
+        },
+      );
     } on Exception catch (e) {
       debugPrint(e.toString());
       emit(HomeTextTranslateError(exception: e));

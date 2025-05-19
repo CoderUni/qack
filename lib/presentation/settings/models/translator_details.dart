@@ -23,3 +23,17 @@ abstract class TranslatorSettings with _$TranslatorSettings {
   factory TranslatorSettings.fromJson(Map<String, dynamic> json) =>
       _$TranslatorDetailsFromJson(json);
 }
+
+extension TranslatorSettingsX on Translator {
+  /// Return svg name of the translator
+  String get svgPath {
+    switch (this) {
+      case Translator.google:
+        return 'assets/images/google_icon.svg.vec';
+      case Translator.baidu:
+        return 'assets/images/baidu_icon.svg.vec';
+      case Translator.deepSeek:
+        return 'assets/images/deepseek_icon.svg.vec';
+    }
+  }
+}

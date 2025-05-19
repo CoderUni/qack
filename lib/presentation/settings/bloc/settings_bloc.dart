@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:qack/constants/key_name_constants.dart';
+import 'package:qack/constants/key_name.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
 

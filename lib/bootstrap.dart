@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
-import 'package:qack/constants/key_name_constants.dart';
+import 'package:qack/constants/key_name.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';

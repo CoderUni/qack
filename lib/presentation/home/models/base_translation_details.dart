@@ -74,9 +74,20 @@ extension BaseTranslationExtension on BaseTranslationDetails {
     }
     return 'Unknown';
   }
+
+  /// Return svg path of the translator
+  String get svgPath {
+    if (this is BaiduTranslation) {
+      return 'assets/images/baidu_icon.svg.vec';
+    } else if (this is DeepseekChatCompletion) {
+      return 'assets/images/deepseek_icon.svg.vec';
+    }
+    throw Exception('All cases in BaseTranslationDetaisl svgName extension '
+        'are not matched.');
+  }
 }
 
-extension BaseTranslationStringExtension on String{
+extension BaseTranslationStringExtension on String {
   /// Returns the name of the translator
   String get translatorName {
     if (this == 'Baidu') {

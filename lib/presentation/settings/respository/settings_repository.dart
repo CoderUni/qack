@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:qack/constants/key_name_constants.dart';
+import 'package:qack/constants/key_name.dart';
 import 'package:qack/presentation/settings/models/translator_details.dart';
 
 final class SettingsRepository {

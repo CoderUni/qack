@@ -203,14 +203,14 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         return InputText(
                           controller: googleApiKeyController,
                           maxLength: 100,
-                          prefixIcon: const SizedBox(
+                          prefixIcon: SizedBox(
                             height: 48,
                             width: 48,
                             child: Padding(
-                              padding: EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(12),
                               child: SvgPicture(
                                 AssetBytesLoader(
-                                  'assets/images/google_icon.svg.vec',
+                                  Translator.google.svgPath,
                                 ),
                               ),
                             ),
@@ -261,14 +261,14 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                           controller: baiduAppIDController,
                           maxLength: 100,
                           labelText: 'App ID',
-                          prefixIcon: const SizedBox(
+                          prefixIcon: SizedBox(
                             height: 48,
                             width: 48,
                             child: Padding(
-                              padding: EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(12),
                               child: SvgPicture(
                                 AssetBytesLoader(
-                                  'assets/images/baidu_icon.svg.vec',
+                                  Translator.baidu.svgPath,
                                 ),
                               ),
                             ),
@@ -337,14 +337,14 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         return InputText(
                           controller: deepSeekApiKeyController,
                           maxLength: 100,
-                          prefixIcon: const SizedBox(
+                          prefixIcon: SizedBox(
                             height: 48,
                             width: 48,
                             child: Padding(
-                              padding: EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(12),
                               child: SvgPicture(
                                 AssetBytesLoader(
-                                  'assets/images/deepseek_icon.svg.vec',
+                                  Translator.deepSeek.svgPath,
                                 ),
                               ),
                             ),

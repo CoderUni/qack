@@ -63,9 +63,12 @@ Future<void> bootstrap(
   }
 
   // Initialize settings bloc
+  final settingsRepository = SettingsRepository(storage: secureStorage);
   final settingsBloc = SettingsBloc(
-    settingsRepository: SettingsRepository(storage: secureStorage),
-  );
+    settingsRepository: settingsRepository,
+  )..add(
+      SettingsFetch(await settingsRepository.getAPIKey()),
+    );
 
   // Initialize HTTP repository
   GetIt.instance.registerLazySingleton<Http>(Http.new);

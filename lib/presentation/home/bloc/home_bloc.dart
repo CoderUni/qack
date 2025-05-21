@@ -4,10 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:qack/presentation/home/models/base_translation_details.dart';
 import 'package:qack/presentation/home/repositories/repositories.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
+import 'package:qack/presentation/settings/models/models.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'home_event.dart';
@@ -17,7 +17,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required this.homeRepository,
     required this.settingsBloc,
-  }) : super(const HomeInitial()) {
+  }) : super(
+          HomeState(
+            _fillEmptyTranslationDetails(
+              settingsBloc.state.translatorSettings!.enabledTranslators,
+            ),
+          ),
+        ) {
     on<HomeTextChanged>(
       _onHomeTextChanged,
       transformer: restartableDebounce(const Duration(milliseconds: 500)),
@@ -32,12 +38,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     try {
-      emit(const HomeTextTranslateLoading());
+      emit(state.loading());
 
       final sourceText = event.sourceText.trim();
 
       if (sourceText.isEmpty) {
-        emit(const HomeTextStateEmpty());
+        emit(state.empty());
         return;
       }
 
@@ -59,16 +65,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           translationDetails[baseTranslationDetail.translatorName] =
               baseTranslationDetail;
 
-          return HomeTextTranslateSuccess(translationDetails);
+          return state.success(translationDetails);
         },
         onError: (e, stackTrace) {
           debugPrint('error: $e');
-          return HomeTextTranslateError(exception: Exception(e));
+          return state.error(Exception(e));
         },
       );
     } on Exception catch (e) {
       debugPrint(e.toString());
-      emit(HomeTextTranslateError(exception: e));
+      emit(state.error(e));
     }
   }
 }
@@ -76,4 +82,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 EventTransformer<T> restartableDebounce<T>(Duration duration) {
   return (events, mapper) =>
       restartable<T>().call(events.debounceTime(duration), mapper);
+}
+
+Map<Translator, BaseTranslationDetails> _fillEmptyTranslationDetails(
+  List<Translator> enabledTranslators,
+) {
+  return {
+    for (final translator in enabledTranslators)
+      translator: const EmptyTranslationDetails(),
+  };
 }

@@ -1,8 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:qack/presentation/home/models/models.dart';
+import 'package:qack/presentation/settings/models/models.dart';
 
 /// Contains all the enabled translators and their translated output.
-typedef TranslationDetails = Map<String, BaseTranslationDetails>;
+typedef TranslationDetails = Map<Translator, BaseTranslationDetails>;
+
+enum TranslationStatus { initial, loading, success, error }
 
 /// {@template base_translation_details}
 /// Base class for translation details.
@@ -13,6 +17,8 @@ abstract class BaseTranslationDetails extends Equatable {
     required this.srcLanguage,
     required this.targetLanguage,
     required this.translatedText,
+    required this.status,
+    required this.exception,
   });
 
   /// Language code of the source text
@@ -22,10 +28,34 @@ abstract class BaseTranslationDetails extends Equatable {
   final String? targetLanguage;
 
   /// {@macro translated_text}
-  final TranslatedText translatedText;
+  final TranslatedText? translatedText;
+
+  /// Status of this certian translation
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final TranslationStatus status;
+
+  /// Exception that occurred during translation
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final Exception? exception;
 
   @override
-  List<Object?> get props => [srcLanguage, targetLanguage, translatedText];
+  List<Object?> get props =>
+      [srcLanguage, targetLanguage, translatedText, status, exception];
+}
+
+/// {@template empty_translation_details}
+/// BaseTranslationDetails with null values.
+/// {@endtemplate}
+class EmptyTranslationDetails extends BaseTranslationDetails {
+  /// {@macro empty_translation_details}
+  const EmptyTranslationDetails()
+      : super(
+          srcLanguage: null,
+          targetLanguage: null,
+          translatedText: null,
+          status: TranslationStatus.initial,
+          exception: null,
+        );
 }
 
 /// {@template base_translation_error}
@@ -64,15 +94,15 @@ final class TranslatedText extends Equatable {
   List<Object?> get props => [inputText, outputText];
 }
 
-extension BaseTranslationExtension on BaseTranslationDetails {
+extension BaseTranslationX on BaseTranslationDetails {
   /// Returns the name of the translator
-  String get translatorName {
+  Translator get translatorName {
     if (this is BaiduTranslation) {
-      return 'Baidu';
+      return Translator.baidu;
     } else if (this is DeepseekChatCompletion) {
-      return 'Deepseek';
+      return Translator.deepSeek;
     }
-    return 'Unknown';
+    return Translator.google;
   }
 
   /// Return svg path of the translator

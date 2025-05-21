@@ -75,37 +75,46 @@ class HomeView extends StatelessWidget {
               padding: contentPadding,
               sliver: BlocBuilder<HomeBloc, HomeState>(
                 builder: (context, state) {
-                  final translationList =
-                      state.translationDetails.values.toList();
-
-                  return switch (state) {
-                    HomeInitial() => const SliverToBoxAdapter(
+                  return switch (state.status) {
+                    HomeStatus.initial ||
+                    HomeStatus.empty =>
+                      const SliverToBoxAdapter(
                         child: Text(
                           'Please enter text to translate',
                         ),
                       ),
-                    HomeTextStateEmpty() => const SliverToBoxAdapter(
-                        child: Text(
-                          'Please enter text to translate',
-                        ),
-                      ),
-                    HomeTextTranslateLoading() => SliverToBoxAdapter(
-                        child: Text(
-                          'Translating...',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ),
-                    HomeTextTranslateSuccess() => SliverList(
+                    // Note: HomeStatus.loading represents that none of the
+                    // translations are completed yet.
+                    // HomeStatus.success represents that at least one
+                    // translation
+                    HomeStatus.loading || HomeStatus.success => SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
                             return TranslationCard(
-                              translationDetails: translationList[index],
+                              translationMapEntry: state
+                                  .translationDetails.entries
+                                  .elementAt(index),
+                              status: state.status,
+                              exception: null,
                             );
                           },
                           childCount: state.translationDetails.length,
                         ),
                       ),
-                    HomeTextTranslateError() => const Text('Error'),
+                    HomeStatus.error => SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return TranslationCard(
+                              translationMapEntry: state
+                                  .translationDetails.entries
+                                  .elementAt(index),
+                              status: state.status,
+                              exception: state.exception,
+                            );
+                          },
+                          childCount: state.translationDetails.length,
+                        ),
+                      ),
                   };
                 },
               ),

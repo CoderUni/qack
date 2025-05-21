@@ -2,21 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:qack/layout/layout_handler.dart';
+import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/models/base_translation_details.dart';
+import 'package:qack/presentation/home/repositories/repositories.dart';
+import 'package:qack/presentation/settings/models/models.dart';
 import 'package:qack/theme/themes/light_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 class TranslationCard extends StatelessWidget {
-  const TranslationCard({required this.translationDetails, super.key});
-  final BaseTranslationDetails translationDetails;
+  const TranslationCard({
+    required this.status,
+    required this.translationMapEntry,
+    required this.exception,
+    super.key,
+  });
+  final HomeStatus status;
+  final MapEntry<Translator, BaseTranslationDetails> translationMapEntry;
+
+  /// This error is a general error in [HomeRepository]'s translateText method.
+  /// It is not a translation error.
+  /// See [BaseTranslationError] or [BaseTranslationDetails] .empty methods for
+  /// translation errors.
+  final Exception? exception;
 
   @override
   Widget build(BuildContext context) {
     const theme = LightTheme();
     return LayoutHandler(
       mobile: TranslationCardView(
-        translationDetails: translationDetails,
+        status: status,
+        translator: translationMapEntry.key,
+        translationDetails: translationMapEntry.value,
+        exception: exception,
         cardMargin: const EdgeInsets.only(bottom: 16),
         cardPadding:
             const EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 4),
@@ -32,7 +50,10 @@ class TranslationCard extends StatelessWidget {
             ),
       ),
       tablet: TranslationCardView(
-        translationDetails: translationDetails,
+        status: status,
+        translator: translationMapEntry.key,
+        translationDetails: translationMapEntry.value,
+        exception: exception,
         cardMargin: const EdgeInsets.only(bottom: 16),
         cardPadding:
             const EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 4),
@@ -53,6 +74,8 @@ class TranslationCard extends StatelessWidget {
 
 class TranslationCardView extends StatelessWidget {
   const TranslationCardView({
+    required this.status,
+    required this.translator,
     required this.translationDetails,
     required this.cardMargin,
     required this.cardPadding,
@@ -61,8 +84,13 @@ class TranslationCardView extends StatelessWidget {
     required this.translationPadding,
     required this.titleStyle,
     required this.translatedTextStyle,
+    required this.exception,
     super.key,
   });
+  final HomeStatus status;
+  final Exception? exception;
+
+  final Translator translator;
   final BaseTranslationDetails translationDetails;
 
   final EdgeInsets cardMargin;
@@ -79,6 +107,40 @@ class TranslationCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const theme = LightTheme();
+    var translationStyle = translatedTextStyle;
+    late final String translationText;
+
+    switch (status) {
+      case HomeStatus.initial:
+      case HomeStatus.empty:
+        translationText = 'Empty translation.';
+      case HomeStatus.loading:
+        translationText = 'Loading...';
+      case HomeStatus.success:
+        // Check if the translation is empty
+        if (translationDetails is EmptyTranslationDetails) {
+          translationText = 'Loading...';
+          break;
+        }
+
+        if (translationDetails.status == TranslationStatus.loading) {
+          translationText = 'Loading...';
+        } else if (translationDetails.status == TranslationStatus.success) {
+          translationText = translationDetails.translatedText!.outputText;
+        } else if (translationDetails.status == TranslationStatus.error ||
+            translationDetails.exception != null) {
+          translationText =
+              'Translation error: ${translationDetails.exception}';
+        } else {
+          translationText = 'Unknown error';
+        }
+      case HomeStatus.error:
+        translationStyle = translatedTextStyle.copyWith(
+          color: theme.errorColor,
+        );
+        translationText = 'Error: $exception';
+    }
+
     return Padding(
       padding: cardMargin,
       child: DecoratedBox(
@@ -99,13 +161,13 @@ class TranslationCardView extends StatelessWidget {
                     width: 28,
                     child: SvgPicture(
                       AssetBytesLoader(
-                        translationDetails.svgPath,
+                        translator.svgPath,
                       ),
                     ),
                   ),
                   Gap(titleGap),
                   Text(
-                    translationDetails.translatorName,
+                    translator.name,
                     style: titleStyle,
                   ),
                   const Spacer(),
@@ -115,22 +177,25 @@ class TranslationCardView extends StatelessWidget {
                 padding: translationMargin,
                 child: InkWell(
                   onTap: () {
-                    launchUrl(
-                      Uri(
-                        scheme: 'plecoapi',
-                        host: 'x-callback-url',
-                        path: 's',
-                        queryParameters: {
-                          'q': translationDetails.translatedText.outputText,
-                        },
-                      ),
-                    );
+                    if (status == HomeStatus.success &&
+                        translationDetails.translatedText != null) {
+                      launchUrl(
+                        Uri(
+                          scheme: 'plecoapi',
+                          host: 'x-callback-url',
+                          path: 's',
+                          queryParameters: {
+                            'q': translationText,
+                          },
+                        ),
+                      );
+                    }
                   },
                   child: Padding(
                     padding: translationPadding,
                     child: Text(
-                      translationDetails.translatedText.outputText,
-                      style: translatedTextStyle,
+                      translationText,
+                      style: translationStyle,
                     ),
                   ),
                 ),

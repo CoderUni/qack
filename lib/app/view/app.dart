@@ -72,11 +72,7 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
-  @override
-  void initState() {
-    context.read<SettingsBloc>().add(const SettingsFetch());
-    super.initState();
-  }
+  
 
   @override
   Widget build(BuildContext context) {

@@ -64,6 +64,12 @@ class SettingsView extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   [
+                    Text(
+                      'Settings',
+                      style: AppTextStyle.displaySM.semiBold.copyWith(
+                        color: theme.textColor1,
+                      ),
+                    ),
                     EditSettingsListTile(
                       color: theme.settingsThemeData.editUsernameColor,
                       icon: LucideIcons.edit,

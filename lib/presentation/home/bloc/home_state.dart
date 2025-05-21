@@ -1,35 +1,52 @@
 part of 'home_bloc.dart';
 
+enum HomeStatus {
+  initial,
+  loading,
+  empty,
+  success,
+  error,
+}
+
 @immutable
-sealed class HomeState extends Equatable {
-  const HomeState([this.translationDetails = const {}]);
+final class HomeState extends Equatable {
+  const HomeState(TranslationDetails details)
+      : this._(translationDetails: details);
+
+  const HomeState._({
+    required this.translationDetails,
+    this.status = HomeStatus.initial,
+    this.exception,
+  });
   final TranslationDetails translationDetails;
 
+  final HomeStatus status;
+  final Exception? exception;
+
+  HomeState loading() => HomeState._(
+        translationDetails: translationDetails,
+        status: HomeStatus.loading,
+      );
+
+  HomeState empty() => HomeState._(
+        translationDetails: translationDetails,
+        status: HomeStatus.empty,
+      );
+
+  HomeState success(TranslationDetails details) => HomeState._(
+        translationDetails: details,
+        status: HomeStatus.success,
+      );
+
+  /// This error is a general error in [HomeRepository]'s translateText method.
+  /// It is not a translation error.
+  /// See [BaseTranslationError] for translation errors.
+  HomeState error(Exception e) => HomeState._(
+        translationDetails: translationDetails,
+        status: HomeStatus.error,
+        exception: e,
+      );
+
   @override
-  List<Object?> get props => [translationDetails];
-}
-
-final class HomeInitial extends HomeState {
-  const HomeInitial();
-}
-
-final class HomeTextTranslateLoading extends HomeState {
-  const HomeTextTranslateLoading();
-}
-
-final class HomeTextStateEmpty extends HomeState {
-  const HomeTextStateEmpty();
-}
-
-final class HomeTextTranslateSuccess extends HomeState {
-  const HomeTextTranslateSuccess(super.translationDetails);
-}
-
-final class HomeTextTranslateError extends HomeState {
-  const HomeTextTranslateError({required this.exception});
-  // TODO: Add which translator got the error
-  final Exception exception;
-
-  @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [translationDetails, status, exception];
 }

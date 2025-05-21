@@ -8,7 +8,11 @@ sealed class SettingsEvent extends Equatable {
 }
 
 final class SettingsFetch extends SettingsEvent {
-  const SettingsFetch();
+  const SettingsFetch([this.translatorSettings]);
+  final TranslatorSettings? translatorSettings;
+
+  @override
+  List<Object?> get props => [translatorSettings];
 }
 
 final class SettingsEditTranslator extends SettingsEvent {

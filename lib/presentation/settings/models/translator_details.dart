@@ -25,6 +25,18 @@ abstract class TranslatorSettings with _$TranslatorSettings {
 }
 
 extension TranslatorSettingsX on Translator {
+  /// Returns the name of the translator
+  String get translatorName {
+    switch (this) {
+      case Translator.google:
+        return 'Google';
+      case Translator.baidu:
+        return 'Baidu';
+      case Translator.deepSeek:
+        return 'DeepSeek';
+    }
+  }
+
   /// Return svg name of the translator
   String get svgPath {
     switch (this) {

@@ -22,13 +22,20 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     Emitter<SettingsState> emit,
   ) async {
     try {
-      emit(const SettingsFetchLoading());
+      // Check if the translator settings are already loaded
+      if (event.translatorSettings != null) {
+        emit(
+          SettingsFetchSuccess(event.translatorSettings),
+        );
+      } else {
+        emit(const SettingsFetchLoading());
 
-      final translatorSettings = await settingsRepository.getAPIKey();
+        final translatorSettings = await settingsRepository.getAPIKey();
 
-      emit(
-        SettingsFetchSuccess(translatorSettings),
-      );
+        emit(
+          SettingsFetchSuccess(translatorSettings),
+        );
+      }
     } on Exception catch (e) {
       emit(
         SettingsFetchFailure(e),

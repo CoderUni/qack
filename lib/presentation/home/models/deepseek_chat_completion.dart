@@ -35,12 +35,53 @@ final class DeepseekChatCompletion extends BaseTranslationDetails {
     required this.model,
     required this.systemFingerprint,
     required this.usage,
+    TranslationStatus status = TranslationStatus.success,
+    Exception? exception,
   }) : super(
           srcLanguage: 'auto',
           targetLanguage: 'auto',
           translatedText: TranslatedText(
             outputText: choices[0].message.content ?? 'Error',
           ),
+          status: status,
+          exception: exception,
+        );
+
+  DeepseekChatCompletion.loading()
+      : this(
+          status: TranslationStatus.loading,
+          id: 'loading',
+          object: 'loading',
+          completionTime: 0,
+          choices: [],
+          model: 'loading',
+          systemFingerprint: 'loading',
+          usage: const DeepSeekUsage(
+            completionTokens: 0,
+            promptTokens: 0,
+            promptCacheHitTokens: 0,
+            promptCacheMissTokens: 0,
+            totalTokens: 0,
+          ),
+        );
+
+  DeepseekChatCompletion.error(Exception e)
+      : this(
+          status: TranslationStatus.error,
+          id: 'err',
+          object: 'err',
+          completionTime: 0,
+          choices: [],
+          model: 'err',
+          systemFingerprint: 'err',
+          usage: const DeepSeekUsage(
+            completionTokens: 0,
+            promptTokens: 0,
+            promptCacheHitTokens: 0,
+            promptCacheMissTokens: 0,
+            totalTokens: 0,
+          ),
+          exception: e,
         );
 
   factory DeepseekChatCompletion.fromJson(Map<String, dynamic> json) =>

@@ -16,10 +16,36 @@ final class BaiduTranslation extends BaseTranslationDetails {
     required this.baiduSrcLanguage,
     required this.baidutargetLanguage,
     required this.baiduTranslatedText,
+    TranslationStatus status = TranslationStatus.success,
+    Exception? exception,
   }) : super(
           srcLanguage: baiduSrcLanguage,
           targetLanguage: baidutargetLanguage,
           translatedText: baiduTranslatedText,
+          status: status,
+          exception: exception,
+        );
+
+  const BaiduTranslation.loading()
+      : this(
+          baiduSrcLanguage: 'loading',
+          baidutargetLanguage: 'loading',
+          baiduTranslatedText: const TranslatedText(
+            inputText: 'Loading',
+            outputText: 'Loading',
+          ),
+          status: TranslationStatus.loading,
+        );
+
+  const BaiduTranslation.error(Exception e)
+      : this(
+          baiduSrcLanguage: 'err',
+          baidutargetLanguage: 'err',
+          baiduTranslatedText: const TranslatedText(
+            inputText: 'Error',
+            outputText: 'Error',
+          ),
+          exception: e,
         );
 
   factory BaiduTranslation.fromJson(Map<String, dynamic> json) =>

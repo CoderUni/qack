@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/gen/fonts.gen.dart';
+import 'package:qack/l10n/arb/app_localizations.dart';
 import 'package:qack/l10n/l10n.dart';
 import 'package:qack/layout/device_info_setter.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
@@ -91,7 +92,7 @@ class _AppViewState extends State<AppView> {
           ),
           useMaterial3: true,
           fontFamily: FontFamily.nunito,
-          cardTheme: CardTheme(
+          cardTheme: CardThemeData(
             color: theme.cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),

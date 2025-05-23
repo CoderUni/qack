@@ -11,6 +11,7 @@ import 'package:qack/presentation/landing/components/cubit/bottom_navigation_bar
 import 'package:qack/presentation/landing/view/landing_page.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
+import 'package:qack/theme/colors.dart';
 import 'package:qack/theme/themes/light_theme.dart';
 
 class App extends StatelessWidget {
@@ -72,8 +73,6 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
-  
-
   @override
   Widget build(BuildContext context) {
     const theme = LightTheme();
@@ -94,11 +93,9 @@ class _AppViewState extends State<AppView> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          /*
-          scaffoldBackgroundColor: state.theme.scaffoldColor,
-          cardColor: state.theme.cardColor,
+          scaffoldBackgroundColor: theme.scaffoldColor,
+          cardColor: theme.cardColor,
           primaryColor: AppColors.primary500,
-          */
         ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

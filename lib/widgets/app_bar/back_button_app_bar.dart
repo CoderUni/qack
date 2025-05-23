@@ -10,11 +10,14 @@ class BackButtonAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.title,
     this.actions,
+    this.showBackButton = true,
   });
 
   final VoidCallback onBack;
   final String? title;
   final List<Widget>? actions;
+
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +30,7 @@ class BackButtonAppBar extends StatelessWidget implements PreferredSizeWidget {
         titleStyle:
             AppTextStyle.textLG.semiBold.copyWith(color: theme.textColor1),
         actions: actions,
+        showBackButton: showBackButton,
       ),
       tablet: BackButtonAppBarView(
         onBack: onBack,
@@ -34,6 +38,7 @@ class BackButtonAppBar extends StatelessWidget implements PreferredSizeWidget {
         titleStyle:
             AppTextStyle.textXL.semiBold.copyWith(color: theme.textColor1),
         actions: actions,
+        showBackButton: showBackButton,
       ),
     );
   }
@@ -46,6 +51,7 @@ class BackButtonAppBarView extends StatelessWidget {
   const BackButtonAppBarView({
     required this.onBack,
     required this.titleStyle,
+    required this.showBackButton,
     super.key,
     this.title,
     this.actions,
@@ -58,16 +64,20 @@ class BackButtonAppBarView extends StatelessWidget {
 
   final List<Widget>? actions;
 
+  final bool showBackButton;
+
   @override
   Widget build(BuildContext context) {
     const theme = LightTheme();
 
     return AppBar(
       backgroundColor: AppColors.transparent,
-      leading: AppBackButton(
-        onBack: onBack,
-        color: theme.textColor1,
-      ),
+      leading: showBackButton
+          ? AppBackButton(
+              onBack: onBack,
+              color: theme.textColor1,
+            )
+          : null,
       title: title != null
           ? AutoSizeText(
               title!,

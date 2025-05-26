@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:qack/presentation/home/models/base_translation_details.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:qack/presentation/home/models/base_translation_details.dart';
 
 part 'baidu_translation.g.dart';
 

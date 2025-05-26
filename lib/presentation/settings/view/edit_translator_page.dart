@@ -121,8 +121,9 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
 
     return Scaffold(
       appBar: BackButtonAppBar(
+        showBackButton: false,
         onBack: Navigator.of(context).pop,
-        title: 'Edit Translator',
+        title: 'Translator Settings',
         actions: [
           InkWell(
             customBorder: const CircleBorder(),

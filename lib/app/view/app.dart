@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/gen/fonts.gen.dart';
 import 'package:qack/l10n/arb/app_localizations.dart';
-import 'package:qack/l10n/l10n.dart';
 import 'package:qack/layout/device_info_setter.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/repositories/repositories.dart';

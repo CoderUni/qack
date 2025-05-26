@@ -144,7 +144,7 @@ final class DeepSeekChatResponseMessage extends Equatable {
   @JsonKey(name: 'reasoning_content')
   final String? reasoningContent;
 
-  @JsonKey(name: 'tool_calls',includeIfNull: false)
+  @JsonKey(name: 'tool_calls', includeIfNull: false)
   final List<DeepSeekToolCall>? toolCalls;
 
   @JsonKey(name: 'role')

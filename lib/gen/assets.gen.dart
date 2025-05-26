@@ -40,14 +40,14 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
-    baiduIcon,
-    baiduIconSvg,
-    deepseekIcon,
-    deepseekIconSvg,
-    googleIcon,
-    googleIconSvg,
-    pageNotFound,
-  ];
+        baiduIcon,
+        baiduIconSvg,
+        deepseekIcon,
+        deepseekIconSvg,
+        googleIcon,
+        googleIconSvg,
+        pageNotFound,
+      ];
 }
 
 class Assets {

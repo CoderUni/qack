@@ -19,5 +19,6 @@ abstract class LinkConstants {
 
   static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';
 
-  static const String deepSeekChatCompletionUrl = '$deepSeekBaseUrl/chat/completions';
+  static const String deepSeekChatCompletionUrl =
+      '$deepSeekBaseUrl/chat/completions';
 }

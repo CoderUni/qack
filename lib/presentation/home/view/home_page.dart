@@ -5,8 +5,6 @@ import 'package:qack/constants/constants.dart';
 import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/components/components.dart';
-import 'package:qack/presentation/home/models/baidu_translation.dart';
-import 'package:qack/presentation/home/models/models.dart';
 import 'package:qack/widgets/input/input.dart';
 
 class HomePage extends StatelessWidget {

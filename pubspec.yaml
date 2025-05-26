@@ -29,7 +29,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   bottom_bar: ^2.0.5
   lucide_icons: ^0.257.0
-  vector_graphics_compiler: ^1.1.16
+  vector_graphics_compiler: ^1.1.17
   flutter_svg: ^2.1.0
   vector_graphics: ^1.1.18
   freezed_annotation: ^3.0.0

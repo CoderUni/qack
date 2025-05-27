@@ -97,8 +97,8 @@ class _$TranslatorSettingsCopyWithImpl<$Res>
 @JsonSerializable()
 class _TranslatorDetails implements TranslatorSettings {
   _TranslatorDetails(
-      {required final List<Translator> enabledTranslators,
-      required final TranslatorApiKeys apiKeys})
+      {final List<Translator> enabledTranslators = const <Translator>[],
+      final TranslatorApiKeys apiKeys = const <String, String>{}})
       : _enabledTranslators = enabledTranslators,
         _apiKeys = apiKeys;
   factory _TranslatorDetails.fromJson(Map<String, dynamic> json) =>
@@ -106,6 +106,7 @@ class _TranslatorDetails implements TranslatorSettings {
 
   final List<Translator> _enabledTranslators;
   @override
+  @JsonKey()
   List<Translator> get enabledTranslators {
     if (_enabledTranslators is EqualUnmodifiableListView)
       return _enabledTranslators;
@@ -115,6 +116,7 @@ class _TranslatorDetails implements TranslatorSettings {
 
   final TranslatorApiKeys _apiKeys;
   @override
+  @JsonKey()
   TranslatorApiKeys get apiKeys {
     if (_apiKeys is EqualUnmodifiableMapView) return _apiKeys;
     // ignore: implicit_dynamic_type

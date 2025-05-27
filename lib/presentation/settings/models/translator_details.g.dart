@@ -8,10 +8,14 @@ part of 'translator_details.dart';
 
 _TranslatorDetails _$TranslatorDetailsFromJson(Map<String, dynamic> json) =>
     _TranslatorDetails(
-      enabledTranslators: (json['enabledTranslators'] as List<dynamic>)
-          .map((e) => $enumDecode(_$TranslatorEnumMap, e))
-          .toList(),
-      apiKeys: Map<String, String>.from(json['apiKeys'] as Map),
+      enabledTranslators: (json['enabledTranslators'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$TranslatorEnumMap, e))
+              .toList() ??
+          const <Translator>[],
+      apiKeys: (json['apiKeys'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+          ) ??
+          const <String, String>{},
     );
 
 Map<String, dynamic> _$TranslatorDetailsToJson(_TranslatorDetails instance) =>

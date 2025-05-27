@@ -9,12 +9,13 @@ final class SettingsRepository {
   final FlutterSecureStorage storage;
 
   // Get the translator API key from the secure storage
-  Future<TranslatorSettings?> getAPIKey() async {
+  Future<TranslatorSettings> getAPIKey() async {
     try {
       final data = await storage.read(key: KeyNameConstants.translator);
 
       if (data == null || data.isEmpty) {
-        return null;
+        // Returns empty translator settings if no data is found
+        return TranslatorSettings();
       }
 
       return TranslatorSettings.fromJson(

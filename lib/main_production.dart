@@ -12,7 +12,7 @@ Future<void> main() async {
   await SentryFlutter.init(
     (options) {
       options
-        ..environment = 'development'
+        ..environment = 'production'
         ..tracesSampleRate = 1.0
         ..dsn = dotenv.env['sentryLink'];
     },

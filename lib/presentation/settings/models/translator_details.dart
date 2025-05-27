@@ -16,8 +16,8 @@ typedef TranslatorApiKeys = Map<String, String>;
 @freezed
 abstract class TranslatorSettings with _$TranslatorSettings {
   factory TranslatorSettings({
-    required List<Translator> enabledTranslators,
-    required TranslatorApiKeys apiKeys,
+    @Default(<Translator>[]) List<Translator> enabledTranslators,
+    @Default(<String, String>{}) TranslatorApiKeys apiKeys,
   }) = _TranslatorDetails;
 
   factory TranslatorSettings.fromJson(Map<String, dynamic> json) =>

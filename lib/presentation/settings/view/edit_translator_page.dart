@@ -167,6 +167,7 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   [
+                    /* Google translate has not been implemented yet
                     Gap(widget.dividerSpacing * 3),
                     // TODO: Translate this into a reusable stateless widget
                     Row(
@@ -225,6 +226,8 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         );
                       },
                     ),
+                    */
+
                     Gap(widget.dividerSpacing * 3),
                     Row(
                       children: [

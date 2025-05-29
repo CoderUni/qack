@@ -9,6 +9,8 @@ Future<void> main() async {
   // Read .env file
   await dotenv.load(fileName: 'assets/.env');
 
+  SentryWidgetsFlutterBinding.ensureInitialized();
+
   await SentryFlutter.init(
     (options) {
       options

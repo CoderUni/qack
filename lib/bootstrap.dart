@@ -39,22 +39,6 @@ Future<void> bootstrap(
     SettingsBloc settingsBloc,
   ) builder,
 ) async {
-  final widgetFlutterBindingSpan = span.startChild(
-    'initialize SentryWidgetsFlutterBinding',
-    description: 'calls SentryWidgetsFlutterBinding.ensureInitialized()',
-  );
-
-  // Ensure SentryWidgetsFlutterBinding is initialized
-  try {
-    SentryWidgetsFlutterBinding.ensureInitialized();
-  } catch (e) {
-    widgetFlutterBindingSpan
-      ..throwable = e
-      ..status = const SpanStatus.notFound();
-  } finally {
-    await widgetFlutterBindingSpan.finish();
-  }
-
   FlutterError.onError = (details) {
     Sentry.captureException(
       details,

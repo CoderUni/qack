@@ -19,6 +19,7 @@ class App extends StatelessWidget {
     required this.settingsBloc,
     super.key,
   });
+
   final FlutterSecureStorage secureStorage;
   final SettingsBloc settingsBloc;
 

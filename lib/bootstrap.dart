@@ -22,26 +22,44 @@ class AppBlocObserver extends BlocObserver {
 
   @override
   void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
+    Sentry.captureException(
+      error,
+      stackTrace: stackTrace,
+    );
+
     log('onError(${bloc.runtimeType}, $error, $stackTrace)');
     super.onError(bloc, error, stackTrace);
   }
 }
 
 Future<void> bootstrap(
+  ISentrySpan span,
   FutureOr<Widget> Function(
     FlutterSecureStorage secureStorage,
     SettingsBloc settingsBloc,
   ) builder,
 ) async {
-  SentryWidgetsFlutterBinding.ensureInitialized();
+  final widgetFlutterBindingSpan = span.startChild(
+    'initialize SentryWidgetsFlutterBinding',
+    description: 'calls SentryWidgetsFlutterBinding.ensureInitialized()',
+  );
+
+  // Ensure SentryWidgetsFlutterBinding is initialized
+  try {
+    SentryWidgetsFlutterBinding.ensureInitialized();
+  } catch (e) {
+    widgetFlutterBindingSpan
+      ..throwable = e
+      ..status = const SpanStatus.notFound();
+  } finally {
+    await widgetFlutterBindingSpan.finish();
+  }
+
   FlutterError.onError = (details) {
-    // TODO: Add Sentry error reporting
-    /*
     Sentry.captureException(
       details,
       stackTrace: details.stack,
     );
-    */
 
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
@@ -49,17 +67,28 @@ Future<void> bootstrap(
   // Initialize local storage repository
   // final localStorage = LocalStorage(sharedPreferences);
 
+  final secureStorageBinding = span.startChild(
+    'retrieve secure storage values',
+    description: 'retrieve required startup values from secure storage',
+  );
   // Initialize secure storage
   const secureStorage = FlutterSecureStorage();
-
-  // Create a random salt if it doesn't exist.
-  final salt = await secureStorage.read(key: KeyNameConstants.md5Salt);
-  if (salt == null || salt.isEmpty) {
-    // Create a random salt and store it in secure storage
-    await secureStorage.write(
-      key: KeyNameConstants.md5Salt,
-      value: DateTime.now().millisecondsSinceEpoch.toString(),
-    );
+  try {
+    // Create a random salt if it doesn't exist.
+    final salt = await secureStorage.read(key: KeyNameConstants.md5Salt);
+    if (salt == null || salt.isEmpty) {
+      // Create a random salt and store it in secure storage
+      await secureStorage.write(
+        key: KeyNameConstants.md5Salt,
+        value: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
+    }
+  } catch (e) {
+    secureStorageBinding
+      ..throwable = e
+      ..status = const SpanStatus.internalError();
+  } finally {
+    await secureStorageBinding.finish();
   }
 
   // Initialize settings bloc

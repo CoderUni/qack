@@ -14,18 +14,33 @@ Future<void> main() async {
       options
         ..environment = 'staging'
         ..tracesSampleRate = 1.0
+        ..sendDefaultPii = true
         ..dsn = dotenv.env['sentryLink'];
     },
     appRunner: () async {
-      await bootstrap((
-        FlutterSecureStorage secureStorage,
-        SettingsBloc settingsBloc,
-      ) async {
-        return App(
-          secureStorage: secureStorage,
-          settingsBloc: settingsBloc,
-        );
-      });
+      final transaction = Sentry.startTransaction(
+        'bootstrap()',
+        'initialization',
+        bindToScope: true,
+      );
+
+      try {
+        await bootstrap(transaction, (
+          FlutterSecureStorage secureStorage,
+          SettingsBloc settingsBloc,
+        ) async {
+          return App(
+            secureStorage: secureStorage,
+            settingsBloc: settingsBloc,
+          );
+        });
+      } catch (exception) {
+        transaction
+          ..throwable = exception
+          ..status = const SpanStatus.internalError();
+      } finally {
+        await transaction.finish();
+      }
     },
   );
 }

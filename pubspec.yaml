@@ -1,6 +1,6 @@
 name: qack
 description: A translation app for learning Chinese and English through speaking.
-version: 0.1.2+3
+version: 0.1.3+4
 publish_to: none
 
 environment:

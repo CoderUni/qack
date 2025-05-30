@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -5,6 +6,7 @@ import 'package:qack/constants/constants.dart';
 import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/components/components.dart';
+import 'package:qack/theme/theme.dart';
 import 'package:qack/widgets/input/input.dart';
 
 class HomePage extends StatelessWidget {
@@ -40,6 +42,9 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const theme = LightTheme();
+    final textController = TextEditingController();
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -51,6 +56,25 @@ class HomeView extends StatelessWidget {
                   Gap(topContentPadding),
                   const AppSearchBar(),
                   InputText(
+                    controller: textController,
+                    suffix: InkWell(
+                      customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      onTap: () {
+                        textController.clear();
+                        context
+                            .read<HomeBloc>()
+                            .add(const HomeTextChanged(sourceText: ''));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(
+                          EvaIcons.closeSquareOutline,
+                          color: theme.inputTextThemeData.iconColor,
+                        ),
+                      ),
+                    ),
                     maxLength: 6000,
                     minLines: 5,
                     maxLines: 5,

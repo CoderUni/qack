@@ -18,6 +18,7 @@ class InputText extends StatelessWidget {
     this.errorStyle,
     this.prefix,
     this.prefixIcon,
+    this.suffix,
     this.suffixIcon,
     this.prefixIconConstraints,
     this.suffixIconConstraints,
@@ -46,6 +47,7 @@ class InputText extends StatelessWidget {
 
   final Widget? prefix;
   final Widget? prefixIcon;
+  final Widget? suffix;
   final Widget? suffixIcon;
 
   final BoxConstraints? prefixIconConstraints;
@@ -96,6 +98,7 @@ class InputText extends StatelessWidget {
                 child: prefixIcon!,
               )
             : null,
+        suffix: suffix,
         suffixIcon: suffixIcon != null
             ? IconTheme(
                 data: IconThemeData(color: inputTextTheme.iconColor),

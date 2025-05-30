@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qack/layout/layout_handler.dart';
+import 'package:qack/presentation/history/view/history_page.dart';
 import 'package:qack/presentation/home/view/home_page.dart';
 import 'package:qack/presentation/landing/components/components.dart';
 import 'package:qack/presentation/settings/view/settings_page.dart';
@@ -33,6 +34,8 @@ class _MobileLandingPageState extends State<MobileLandingPage> {
           switch (state.selectedPage) {
             case SelectedPage.home:
               return const HomePage();
+            case SelectedPage.history:
+              return const HistoryPage();
             case SelectedPage.settings:
               return const SettingsPage();
           }
@@ -59,6 +62,8 @@ class _TabletLandingPageState extends State<TabletLandingPage> {
           switch (state.selectedPage) {
             case SelectedPage.home:
               return const HomePage();
+            case SelectedPage.history:
+              return const HistoryPage();
             case SelectedPage.settings:
               return const SettingsPage();
           }

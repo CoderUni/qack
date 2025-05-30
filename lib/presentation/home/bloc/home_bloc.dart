@@ -24,6 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             ),
           ),
         ) {
+    on<HomeTextCleared>(_onHomeTextCleared);
     on<HomeTextChanged>(
       _onHomeTextChanged,
       transformer: restartableDebounce(const Duration(milliseconds: 500)),
@@ -32,6 +33,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   final HomeRepository homeRepository;
   final SettingsBloc settingsBloc;
+
+  void _onHomeTextCleared(
+    HomeTextCleared event,
+    Emitter<HomeState> emit,
+  ) {
+    event.textController.clear();
+    emit(state.empty());
+  }
 
   Future<void> _onHomeTextChanged(
     HomeTextChanged event,

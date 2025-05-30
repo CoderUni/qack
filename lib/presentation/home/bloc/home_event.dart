@@ -8,6 +8,14 @@ sealed class HomeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+final class HomeTextCleared extends HomeEvent {
+  const HomeTextCleared({required this.textController});
+  final TextEditingController textController;
+
+  @override
+  List<Object?> get props => [textController];
+}
+
 final class HomeTextChanged extends HomeEvent {
   const HomeTextChanged({required this.sourceText});
 

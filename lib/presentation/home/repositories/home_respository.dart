@@ -6,10 +6,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
 import 'package:qack/constants/constants.dart';
+import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/models/baidu_translation.dart';
 import 'package:qack/presentation/home/models/base_translation_details.dart';
 import 'package:qack/presentation/home/models/deepseek_chat_completion.dart';
 import 'package:qack/presentation/home/models/deepseek_message.dart';
+import 'package:qack/presentation/home/models/models.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 
 final class HomeRepository {
@@ -20,8 +22,6 @@ final class HomeRepository {
 
   Stream<BaseTranslationDetails> translateText(
     String text, {
-    required String srcLanguage,
-    required String targetLanguage,
     required TranslatorSettings translatorSettings,
   }) async* {
     final enabledTranslators = translatorSettings.enabledTranslators;
@@ -33,6 +33,21 @@ final class HomeRepository {
     final rootIsolateToken = RootIsolateToken.instance!;
 
     final futures = <Future<BaseTranslationDetails>>[];
+
+    // Detect the source and target language
+    final srcLanguage = _detectLanguage(text);
+
+    late final Language targetLanguage;
+
+    switch (srcLanguage) {
+      case Language.chinese:
+        targetLanguage = Language.english;
+      case Language.english:
+        targetLanguage = Language.chinese;
+      case Language.auto:
+      case Language.unknown:
+        targetLanguage = Language.english;
+    }
 
     for (final translator in enabledTranslators) {
       switch (translator) {
@@ -49,8 +64,8 @@ final class HomeRepository {
                   text,
                   httpClient,
                   rootIsolateToken,
-                  srcLanguage: srcLanguage,
-                  targetLanguage: targetLanguage,
+                  srcLanguage: srcLanguage.code ?? Language.auto.code!,
+                  targetLanguage: targetLanguage.code!,
                   translatorSettings: translatorSettings,
                 ),
               ),
@@ -66,8 +81,8 @@ final class HomeRepository {
                   rootIsolateToken,
                   // src and target lang are manually set to auto
                   // in [DeepseekChatCompletion]
-                  srcLanguage: srcLanguage,
-                  targetLanguage: targetLanguage,
+                  srcLanguage: srcLanguage.code ?? Language.auto.code!,
+                  targetLanguage: targetLanguage.code!,
                   translatorSettings: translatorSettings,
                 ),
               ),
@@ -179,8 +194,7 @@ final class HomeRepository {
         model: DeepSeekModel.chat,
         messages: [
           DeepSeekUserMessage(
-            uContent: 'Translate to English or Chinese. '
-                'Only translate and do nothing else.'
+            uContent: 'Translate to ${targetLanguage.toUpperCase()}:'
                 ' $inputText',
           ),
         ],
@@ -202,6 +216,23 @@ final class HomeRepository {
       );
     } on Exception catch (e) {
       return DeepseekChatCompletion.error(e);
+    }
+  }
+
+  Language _detectLanguage(String text) {
+    // detect chinese characters using regex
+    final chineseRegex = RegExp(r'[\u4e00-\u9fff]');
+    final englishRegex = RegExp('[a-zA-Z]');
+
+    final totalChineseMatches = chineseRegex.allMatches(text);
+    final totalEnglishMatches = englishRegex.allMatches(text);
+
+    if (totalChineseMatches.length > totalEnglishMatches.length) {
+      return Language.chinese;
+    } else if (totalEnglishMatches.length > totalChineseMatches.length) {
+      return Language.english;
+    } else {
+      return Language.unknown;
     }
   }
 }

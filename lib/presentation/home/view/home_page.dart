@@ -57,7 +57,7 @@ class HomeView extends StatelessWidget {
                   const AppSearchBar(),
                   InputText(
                     controller: textController,
-                    suffix: InkWell(
+                    /* suffix: InkWell(
                       customBorder: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -75,6 +75,7 @@ class HomeView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    */
                     maxLength: 6000,
                     minLines: 5,
                     maxLines: 5,

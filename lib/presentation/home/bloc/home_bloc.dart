@@ -64,8 +64,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await emit.forEach(
         homeRepository.translateText(
           sourceText,
-          srcLanguage: 'auto',
-          targetLanguage: 'zh',
           translatorSettings: settingsBloc.state.translatorSettings!,
         ),
         onData: (baseTranslationDetail) {

@@ -2,6 +2,7 @@ import 'package:bottom_bar/bottom_bar.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/landing/components/components.dart';
 import 'package:qack/theme/theme.dart';
@@ -97,6 +98,7 @@ class _BottomNavBar extends StatelessWidget {
               border: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
+              boxShadow: theme.cardShadow,
               itemPadding: itemPadding,
               textStyle: textStyle,
               items: [
@@ -110,6 +112,19 @@ class _BottomNavBar extends StatelessWidget {
                   ),
                   activeColor: navigationThemeData.activeHomeColor,
                   activeTitleColor: navigationThemeData.activeHomeTitleColor,
+                  inactiveColor:
+                      navigationThemeData.inactiveNavigationTitleColor,
+                ),
+                BottomBarItem(
+                  icon: Icon(
+                    Icons.history,
+                    size: iconSize,
+                  ),
+                  title: const Text(
+                    'History',
+                  ),
+                  activeColor: navigationThemeData.activeHistoryColor,
+                  activeTitleColor: navigationThemeData.activeHistoryTitleColor,
                   inactiveColor:
                       navigationThemeData.inactiveNavigationTitleColor,
                 ),

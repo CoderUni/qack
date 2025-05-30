@@ -2,6 +2,7 @@ part of 'bottom_navigation_bar_cubit.dart';
 
 enum SelectedPage {
   home,
+  history,
   settings,
 }
 

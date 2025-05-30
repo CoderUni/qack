@@ -92,6 +92,8 @@ final class LightTheme extends BaseTheme {
         inactiveNavigationTitleColor: AppColors.gray700,
         activeHomeColor: AppColors.primary500,
         activeHomeTitleColor: AppColors.primary700,
+        activeHistoryColor: AppColors.green500,
+        activeHistoryTitleColor: AppColors.green600,
         activeSettingsColor: AppColors.orange500,
         activeSettingsTitleColor: AppColors.orange600,
         sideNavigationBarShadow: AppShadows.md(),

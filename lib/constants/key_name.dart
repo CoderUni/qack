@@ -5,6 +5,8 @@ abstract class KeyNameConstants {
 
   static const String translator = 'translator_details';
 
+  static const String sentryEnv = 'SENTRY_LINK';
+
   // Normal translators
   static const String google = 'google';
   static const String baiduAppID = 'baiduAppID';

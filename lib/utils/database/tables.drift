@@ -1,0 +1,38 @@
+
+-- translation history table
+CREATE TABLE translationHistory(
+    id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    createdAt TEXT NOT NULL,
+    input TEXT NOT NULL
+);
+
+-- history operations
+
+
+-- translation history items
+CREATE TABLE translationHistoryItem(
+    id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    parentID INT NOT NULL REFERENCES translationHistory (id),
+    translator INT NOT NULL,
+    output TEXT NOT NULL
+);
+
+-- translation history items indexes
+CREATE INDEX translationHistoryItemParentIDIndex ON translationHistoryItem (parentID);
+
+CREATE VIRTUAL TABLE translationHistoryItemFTS USING fts5(translator);
+
+-- translation history items operations
+fetchTranslationHistory: SELECT th.id, th.createdAt, th.input,
+                json_group_array(
+                    json_object(
+                    'id', thi.id,
+                    'parentID', thi.parentID,
+                    'translator', thi.translator,
+                    'output', thi.output
+                    )
+                ) AS historyItems
+             FROM translationHistory th
+             INNER JOIN translationHistoryItem thi ON th.id = thi.parentID
+             GROUP BY th.id
+             ORDER BY th.id DESC;

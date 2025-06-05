@@ -8,6 +8,7 @@ import 'package:qack/presentation/home/models/base_translation_details.dart';
 import 'package:qack/presentation/home/repositories/repositories.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/models/models.dart';
+import 'package:qack/utils/database/database.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'home_event.dart';
@@ -17,6 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required this.homeRepository,
     required this.settingsBloc,
+    required this.appDatabase,
   }) : super(
           HomeState(
             _fillEmptyTranslationDetails(
@@ -33,6 +35,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   final HomeRepository homeRepository;
   final SettingsBloc settingsBloc;
+
+  final AppDatabase appDatabase;
 
   void _onHomeTextCleared(
     HomeTextCleared event,
@@ -56,14 +60,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         return;
       }
 
-      // TODO: call deepl translator here
-      // Check if majority of the text is in English or Chinese
-      // and then change the target_lang to the other language
-      // Set source_lang manually if the auto-detect is not good
-
       await emit.forEach(
         homeRepository.translateText(
           sourceText,
+          db: appDatabase,
           translatorSettings: settingsBloc.state.translatorSettings!,
         ),
         onData: (baseTranslationDetail) {
@@ -71,6 +71,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           translationDetails[baseTranslationDetail.translatorName] =
               baseTranslationDetail;
+
+          // For now, we register all the translated text even if they
+          // are one letter apart
 
           return state.success(translationDetails);
         },

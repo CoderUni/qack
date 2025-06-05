@@ -12,21 +12,25 @@ import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
 import 'package:qack/theme/colors.dart';
 import 'package:qack/theme/themes/light_theme.dart';
+import 'package:qack/utils/database/database.dart';
 
 class App extends StatelessWidget {
   const App({
     required this.secureStorage,
     required this.settingsBloc,
+    required this.appDatabase,
     super.key,
   });
 
   final FlutterSecureStorage secureStorage;
   final SettingsBloc settingsBloc;
+  final AppDatabase appDatabase;
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider(create: (context) => appDatabase),
         RepositoryProvider(
           create: (context) => SettingsRepository(
             storage: secureStorage,
@@ -54,6 +58,7 @@ class _App extends StatelessWidget {
           create: (context) => HomeBloc(
             homeRepository: context.read<HomeRepository>(),
             settingsBloc: settingsBloc,
+            appDatabase: context.read<AppDatabase>(),
           ),
         ),
         BlocProvider(create: (context) => BottomNavigationBarCubit()),
@@ -77,8 +82,7 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     const theme = LightTheme();
     return Listener(
-      onPointerDown: (_) =>
-          WidgetsBinding.instance.focusManager.primaryFocus?.unfocus(),
+      onPointerDown: (_) => FocusManager().primaryFocus?.unfocus(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

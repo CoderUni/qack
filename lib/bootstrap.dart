@@ -9,6 +9,7 @@ import 'package:http_client/http_client.dart';
 import 'package:qack/constants/key_name.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
+import 'package:qack/utils/database/database.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -37,6 +38,7 @@ Future<void> bootstrap(
   FutureOr<Widget> Function(
     FlutterSecureStorage secureStorage,
     SettingsBloc settingsBloc,
+    AppDatabase appDatabase,
   ) builder,
 ) async {
   FlutterError.onError = (details) {
@@ -49,7 +51,7 @@ Future<void> bootstrap(
   };
 
   // Initialize local storage repository
-  // final localStorage = LocalStorage(sharedPreferences);
+  final appDatabase = AppDatabase();
 
   final secureStorageBinding = span.startChild(
     'retrieve secure storage values',
@@ -88,5 +90,5 @@ Future<void> bootstrap(
 
   Bloc.observer = const AppBlocObserver();
 
-  runApp(await builder(secureStorage, settingsBloc));
+  runApp(await builder(secureStorage, settingsBloc, appDatabase));
 }

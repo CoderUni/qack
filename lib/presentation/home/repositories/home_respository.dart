@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -13,6 +15,7 @@ import 'package:qack/presentation/home/models/deepseek_chat_completion.dart';
 import 'package:qack/presentation/home/models/deepseek_message.dart';
 import 'package:qack/presentation/home/models/models.dart';
 import 'package:qack/presentation/settings/models/models.dart';
+import 'package:qack/utils/database/database.dart';
 
 final class HomeRepository {
   const HomeRepository({
@@ -22,6 +25,7 @@ final class HomeRepository {
 
   Stream<BaseTranslationDetails> translateText(
     String text, {
+    required AppDatabase db,
     required TranslatorSettings translatorSettings,
   }) async* {
     final enabledTranslators = translatorSettings.enabledTranslators;
@@ -91,8 +95,27 @@ final class HomeRepository {
       }
     }
 
+    // Store the translation request in the database
+    final historyId = await db.into(db.translationHistory).insert(
+          TranslationHistoryCompanion(
+            createdAt: Value(DateTime.now().toIso8601String()),
+            input: Value(text),
+          ),
+        );
+
+    // Yield the output of each translation service and store the results
     for (final future in futures) {
-      yield await future;
+      final translationDetails = await future;
+      yield translationDetails;
+
+      await db.into(db.translationHistoryItem).insert(
+            TranslationHistoryItemCompanion(
+              parentID: Value(historyId),
+              translator: Value(translationDetails.translatorName.index),
+              output:
+                  Value(translationDetails.translatedText?.outputText ?? ''),
+            ),
+          );
     }
 
     return;

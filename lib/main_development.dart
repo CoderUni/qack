@@ -4,6 +4,7 @@ import 'package:qack/app/view/app.dart';
 import 'package:qack/bootstrap.dart';
 import 'package:qack/constants/key_name.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
+import 'package:qack/utils/database/database.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
@@ -32,10 +33,12 @@ Future<void> main() async {
         await bootstrap(transaction, (
           FlutterSecureStorage secureStorage,
           SettingsBloc settingsBloc,
+          AppDatabase appDatabase,
         ) async {
           return App(
             secureStorage: secureStorage,
             settingsBloc: settingsBloc,
+            appDatabase: appDatabase,
           );
         });
       } catch (exception) {

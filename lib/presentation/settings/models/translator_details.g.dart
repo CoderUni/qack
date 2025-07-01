@@ -30,4 +30,5 @@ const _$TranslatorEnumMap = {
   Translator.google: 'google',
   Translator.baidu: 'baidu',
   Translator.deepSeek: 'deepSeek',
+  Translator.youDao: 'youDao',
 };

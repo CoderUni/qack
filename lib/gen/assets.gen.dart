@@ -38,6 +38,12 @@ class $AssetsImagesGen {
   AssetGenImage get pageNotFound =>
       const AssetGenImage('assets/images/page_not_found.png');
 
+  /// File path: assets/images/youdao_icon.svg
+  String get youdaoIcon => 'assets/images/youdao_icon.svg';
+
+  /// File path: assets/images/youdao_icon.svg.vec
+  String get youdaoIconSvg => 'assets/images/youdao_icon.svg.vec';
+
   /// List of all assets
   List<dynamic> get values => [
     baiduIcon,
@@ -47,6 +53,8 @@ class $AssetsImagesGen {
     googleIcon,
     googleIconSvg,
     pageNotFound,
+    youdaoIcon,
+    youdaoIconSvg,
   ];
 }
 

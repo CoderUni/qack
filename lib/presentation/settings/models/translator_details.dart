@@ -9,6 +9,7 @@ enum Translator {
   google,
   baidu,
   deepSeek,
+  youDao,
 }
 
 typedef TranslatorApiKeys = Map<String, String>;
@@ -34,6 +35,8 @@ extension TranslatorSettingsX on Translator {
         return 'Baidu';
       case Translator.deepSeek:
         return 'DeepSeek';
+      case Translator.youDao:
+        return 'YouDao';
     }
   }
 
@@ -46,6 +49,8 @@ extension TranslatorSettingsX on Translator {
         return 'assets/images/baidu_icon.svg.vec';
       case Translator.deepSeek:
         return 'assets/images/deepseek_icon.svg.vec';
+      case Translator.youDao:
+        return 'assets/images/youdao_icon.svg.vec';
     }
   }
 }

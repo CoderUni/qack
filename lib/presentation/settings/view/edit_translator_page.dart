@@ -80,6 +80,12 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
   /// [TextEditingController] for DeepSeek API Key
   late final TextEditingController deepSeekApiKeyController;
 
+  /// [TextEditingController] for Youdao App ID
+  late final TextEditingController youDaoAppIDController;
+
+  /// [TextEditingController] for Youdao Secret Key
+  late final TextEditingController youDaoSecretKeyController;
+
   @override
   void initState() {
     final apiKeys =
@@ -102,6 +108,14 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
       text: apiKeys?[KeyNameConstants.deepSeek],
     );
 
+    youDaoAppIDController = TextEditingController(
+      text: apiKeys?[KeyNameConstants.youDaoAppID],
+    );
+
+    youDaoSecretKeyController = TextEditingController(
+      text: apiKeys?[KeyNameConstants.youDaoSecretKey],
+    );
+
     super.initState();
   }
 
@@ -112,6 +126,8 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
     baiduAppIDController.dispose();
     baiduSecretKeyController.dispose();
     deepSeekApiKeyController.dispose();
+    youDaoAppIDController.dispose();
+    youDaoSecretKeyController.dispose();
     super.dispose();
   }
 
@@ -152,6 +168,8 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                       baiduAppID: baiduAppIDController.text.trim(),
                       baiduSecretKey: baiduSecretKeyController.text.trim(),
                       deepSeekApiKey: deepSeekApiKeyController.text.trim(),
+                      youDaoAppID: youDaoAppIDController.text.trim(),
+                      youDaoSecretKey: youDaoSecretKeyController.text.trim(),
                     ),
                   );
             },
@@ -304,7 +322,6 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         );
                       },
                     ),
-
                     Gap(widget.dividerSpacing * 3),
                     Row(
                       children: [
@@ -357,6 +374,82 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                           // Validate Deepseek API key only if the
                           // Deekseek is enabled
                           validator: state[Translator.deepSeek] != true
+                              ? (value) => null
+                              : null,
+                        );
+                      },
+                    ),
+                    Gap(widget.dividerSpacing * 3),
+                    Row(
+                      children: [
+                        Text(
+                          'Youdao',
+                          style: widget.titleTextStyle,
+                        ),
+                        const Spacer(),
+                        BlocBuilder<EnableTranslatorCubit,
+                            Map<Translator, bool>>(
+                          buildWhen: (previous, current) =>
+                              previous[Translator.youDao] !=
+                              current[Translator.youDao],
+                          builder: (context, state) {
+                            return AppSwitch(
+                              value: state[Translator.youDao] ?? false,
+                              onChanged: (value) => context
+                                  .read<EnableTranslatorCubit>()
+                                  .toggleTranslator(
+                                    translator: Translator.youDao,
+                                    value: value,
+                                  ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Gap(widget.dividerSpacing),
+                    BlocBuilder<EnableTranslatorCubit, Map<Translator, bool>>(
+                      buildWhen: (previous, current) =>
+                          previous[Translator.youDao] !=
+                          current[Translator.youDao],
+                      builder: (context, state) {
+                        return InputText(
+                          controller: youDaoAppIDController,
+                          maxLength: 100,
+                          labelText: 'App ID',
+                          prefixIcon: SizedBox(
+                            height: 48,
+                            width: 48,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: SvgPicture(
+                                AssetBytesLoader(
+                                  Translator.youDao.svgPath,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Validate baidu app ID only if the Baidu
+                          // translator is enabled
+                          validator: state[Translator.youDao] != true
+                              ? (value) => null
+                              : null,
+                        );
+                      },
+                    ),
+                    Gap(widget.inputTextSpacing),
+                    BlocBuilder<EnableTranslatorCubit, Map<Translator, bool>>(
+                      buildWhen: (previous, current) =>
+                          previous[Translator.youDao] !=
+                          current[Translator.youDao],
+                      builder: (context, state) {
+                        return InputText(
+                          controller: youDaoSecretKeyController,
+                          maxLength: 100,
+                          labelText: 'Secret Key',
+                          prefixIcon: const Icon(Icons.lock),
+                          // Validate baidu access key only if the Baidu
+                          // translator is enabled
+                          validator: state[Translator.youDao] != true
                               ? (value) => null
                               : null,
                         );

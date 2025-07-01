@@ -504,6 +504,13 @@ class TranslationHistoryItemFTS extends Table
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   TranslationHistoryItemFTS(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _parentIDMeta =
+      const VerificationMeta('parentID');
+  late final GeneratedColumn<String> parentID = GeneratedColumn<String>(
+      'parentID', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
   static const VerificationMeta _translatorMeta =
       const VerificationMeta('translator');
   late final GeneratedColumn<String> translator = GeneratedColumn<String>(
@@ -512,7 +519,7 @@ class TranslationHistoryItemFTS extends Table
       requiredDuringInsert: true,
       $customConstraints: '');
   @override
-  List<GeneratedColumn> get $columns => [translator];
+  List<GeneratedColumn> get $columns => [parentID, translator];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -524,6 +531,12 @@ class TranslationHistoryItemFTS extends Table
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('parentID')) {
+      context.handle(_parentIDMeta,
+          parentID.isAcceptableOrUnknown(data['parentID']!, _parentIDMeta));
+    } else if (isInserting) {
+      context.missing(_parentIDMeta);
+    }
     if (data.containsKey('translator')) {
       context.handle(
           _translatorMeta,
@@ -542,6 +555,8 @@ class TranslationHistoryItemFTS extends Table
       {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TranslationHistoryItemFTSData(
+      parentID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}parentID'])!,
       translator: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}translator'])!,
     );
@@ -555,22 +570,26 @@ class TranslationHistoryItemFTS extends Table
   @override
   bool get dontWriteConstraints => true;
   @override
-  String get moduleAndArgs => 'fts5(translator)';
+  String get moduleAndArgs => 'fts5(parentID, translator)';
 }
 
 class TranslationHistoryItemFTSData extends DataClass
     implements Insertable<TranslationHistoryItemFTSData> {
+  final String parentID;
   final String translator;
-  const TranslationHistoryItemFTSData({required this.translator});
+  const TranslationHistoryItemFTSData(
+      {required this.parentID, required this.translator});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['parentID'] = Variable<String>(parentID);
     map['translator'] = Variable<String>(translator);
     return map;
   }
 
   TranslationHistoryItemFTSCompanion toCompanion(bool nullToAbsent) {
     return TranslationHistoryItemFTSCompanion(
+      parentID: Value(parentID),
       translator: Value(translator),
     );
   }
@@ -579,6 +598,7 @@ class TranslationHistoryItemFTSData extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TranslationHistoryItemFTSData(
+      parentID: serializer.fromJson<String>(json['parentID']),
       translator: serializer.fromJson<String>(json['translator']),
     );
   }
@@ -586,17 +606,21 @@ class TranslationHistoryItemFTSData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'parentID': serializer.toJson<String>(parentID),
       'translator': serializer.toJson<String>(translator),
     };
   }
 
-  TranslationHistoryItemFTSData copyWith({String? translator}) =>
+  TranslationHistoryItemFTSData copyWith(
+          {String? parentID, String? translator}) =>
       TranslationHistoryItemFTSData(
+        parentID: parentID ?? this.parentID,
         translator: translator ?? this.translator,
       );
   TranslationHistoryItemFTSData copyWithCompanion(
       TranslationHistoryItemFTSCompanion data) {
     return TranslationHistoryItemFTSData(
+      parentID: data.parentID.present ? data.parentID.value : this.parentID,
       translator:
           data.translator.present ? data.translator.value : this.translator,
     );
@@ -605,45 +629,54 @@ class TranslationHistoryItemFTSData extends DataClass
   @override
   String toString() {
     return (StringBuffer('TranslationHistoryItemFTSData(')
+          ..write('parentID: $parentID, ')
           ..write('translator: $translator')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => translator.hashCode;
+  int get hashCode => Object.hash(parentID, translator);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TranslationHistoryItemFTSData &&
+          other.parentID == this.parentID &&
           other.translator == this.translator);
 }
 
 class TranslationHistoryItemFTSCompanion
     extends UpdateCompanion<TranslationHistoryItemFTSData> {
+  final Value<String> parentID;
   final Value<String> translator;
   final Value<int> rowid;
   const TranslationHistoryItemFTSCompanion({
+    this.parentID = const Value.absent(),
     this.translator = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TranslationHistoryItemFTSCompanion.insert({
+    required String parentID,
     required String translator,
     this.rowid = const Value.absent(),
-  }) : translator = Value(translator);
+  })  : parentID = Value(parentID),
+        translator = Value(translator);
   static Insertable<TranslationHistoryItemFTSData> custom({
+    Expression<String>? parentID,
     Expression<String>? translator,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (parentID != null) 'parentID': parentID,
       if (translator != null) 'translator': translator,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   TranslationHistoryItemFTSCompanion copyWith(
-      {Value<String>? translator, Value<int>? rowid}) {
+      {Value<String>? parentID, Value<String>? translator, Value<int>? rowid}) {
     return TranslationHistoryItemFTSCompanion(
+      parentID: parentID ?? this.parentID,
       translator: translator ?? this.translator,
       rowid: rowid ?? this.rowid,
     );
@@ -652,6 +685,9 @@ class TranslationHistoryItemFTSCompanion
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (parentID.present) {
+      map['parentID'] = Variable<String>(parentID.value);
+    }
     if (translator.present) {
       map['translator'] = Variable<String>(translator.value);
     }
@@ -664,6 +700,7 @@ class TranslationHistoryItemFTSCompanion
   @override
   String toString() {
     return (StringBuffer('TranslationHistoryItemFTSCompanion(')
+          ..write('parentID: $parentID, ')
           ..write('translator: $translator, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -1195,11 +1232,13 @@ typedef $TranslationHistoryItemProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function({bool parentID})>;
 typedef $TranslationHistoryItemFTSCreateCompanionBuilder
     = TranslationHistoryItemFTSCompanion Function({
+  required String parentID,
   required String translator,
   Value<int> rowid,
 });
 typedef $TranslationHistoryItemFTSUpdateCompanionBuilder
     = TranslationHistoryItemFTSCompanion Function({
+  Value<String> parentID,
   Value<String> translator,
   Value<int> rowid,
 });
@@ -1213,6 +1252,9 @@ class $TranslationHistoryItemFTSFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get parentID => $composableBuilder(
+      column: $table.parentID, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get translator => $composableBuilder(
       column: $table.translator, builder: (column) => ColumnFilters(column));
 }
@@ -1226,6 +1268,9 @@ class $TranslationHistoryItemFTSOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get parentID => $composableBuilder(
+      column: $table.parentID, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get translator => $composableBuilder(
       column: $table.translator, builder: (column) => ColumnOrderings(column));
 }
@@ -1239,6 +1284,9 @@ class $TranslationHistoryItemFTSAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get parentID =>
+      $composableBuilder(column: $table.parentID, builder: (column) => column);
+
   GeneratedColumn<String> get translator => $composableBuilder(
       column: $table.translator, builder: (column) => column);
 }
@@ -1273,18 +1321,22 @@ class $TranslationHistoryItemFTSTableManager extends RootTableManager<
               $TranslationHistoryItemFTSAnnotationComposer(
                   $db: db, $table: table),
           updateCompanionCallback: ({
+            Value<String> parentID = const Value.absent(),
             Value<String> translator = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TranslationHistoryItemFTSCompanion(
+            parentID: parentID,
             translator: translator,
             rowid: rowid,
           ),
           createCompanionCallback: ({
+            required String parentID,
             required String translator,
             Value<int> rowid = const Value.absent(),
           }) =>
               TranslationHistoryItemFTSCompanion.insert(
+            parentID: parentID,
             translator: translator,
             rowid: rowid,
           ),

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qack/presentation/home/models/models.dart';
+import 'package:qack/presentation/home/models/youdao_translation.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 
 /// Contains all the enabled translators and their translated output.
@@ -74,6 +75,31 @@ abstract class BaseTranslationError extends Equatable implements Exception {
   List<Object?> get props => [errorMessage];
 }
 
+/// {@template no_translator_enabled_exception}
+/// Exception thrown when no translator is enabled.
+/// This is a [BaseTranslationError] and should be thrown when no translator
+/// is enabled.
+/// {@endtemplate}
+class NoTranslatorEnabledException implements Exception, BaseTranslationError {
+  /// {@macro no_translator_enabled_exception}
+  const NoTranslatorEnabledException();
+
+  static const _errorMessage =
+      'No translator enabled. Please enable a translator.';
+
+  @override
+  String toString() => _errorMessage;
+
+  @override
+  String get errorMessage => _errorMessage;
+
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool? get stringify => false;
+}
+
 /// {@template translated_text}
 /// Contains the translated input and output text.
 /// {@endtemplate}
@@ -101,6 +127,8 @@ extension BaseTranslationX on BaseTranslationDetails {
       return Translator.baidu;
     } else if (this is DeepseekChatCompletion) {
       return Translator.deepSeek;
+    } else if (this is YouDaoTranslation) {
+      return Translator.youDao;
     }
     return Translator.google;
   }
@@ -111,8 +139,10 @@ extension BaseTranslationX on BaseTranslationDetails {
       return 'assets/images/baidu_icon.svg.vec';
     } else if (this is DeepseekChatCompletion) {
       return 'assets/images/deepseek_icon.svg.vec';
+    } else if (this is YouDaoTranslation) {
+      return 'assets/images/youdao_icon.svg.vec';
     }
-    throw Exception('All cases in BaseTranslationDetaisl svgName extension '
+    throw Exception('All cases in BaseTranslationDetails svgName extension '
         'are not matched.');
   }
 }
@@ -124,6 +154,8 @@ extension BaseTranslationStringExtension on String {
       return 'Baidu';
     } else if (this == 'Deepseek') {
       return 'Deepseek';
+    } else if (this == 'YouDao') {
+      return 'YouDao';
     }
     return 'Unknown';
   }

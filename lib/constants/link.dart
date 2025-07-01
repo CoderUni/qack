@@ -17,6 +17,9 @@ abstract class LinkConstants {
   static const String baiduTranslateTranslationUrl =
       '$baiduTranslateBaseUrl/trans/vip/translate';
 
+  /// Base URL for the YouDao Translate API
+  static const String youDaoTranslateTextUrl = 'https://openapi.youdao.com/api';
+
   static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';
 
   static const String deepSeekChatCompletionUrl =

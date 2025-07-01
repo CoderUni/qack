@@ -23,6 +23,8 @@ final class SettingsEditTranslator extends SettingsEvent {
     required this.baiduAppID,
     required this.baiduSecretKey,
     required this.deepSeekApiKey,
+    required this.youDaoAppID,
+    required this.youDaoSecretKey,
   });
 
   final GlobalKey<FormState> formKey;
@@ -39,6 +41,10 @@ final class SettingsEditTranslator extends SettingsEvent {
   // DeepSeek api keys
   final String? deepSeekApiKey;
 
+  // YouDao api keys
+  final String? youDaoAppID;
+  final String? youDaoSecretKey;
+
   @override
   List<Object?> get props => [
         formKey,
@@ -47,5 +53,7 @@ final class SettingsEditTranslator extends SettingsEvent {
         baiduAppID,
         baiduSecretKey,
         deepSeekApiKey,
+        youDaoAppID,
+        youDaoSecretKey,
       ];
 }

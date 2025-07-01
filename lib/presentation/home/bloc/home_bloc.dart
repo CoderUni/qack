@@ -60,6 +60,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         return;
       }
 
+      // TODO: Tell the user that the translation won't work if there is no
+      // translator enabled
+      if (settingsBloc.state.translatorSettings == null ||
+          settingsBloc.state.translatorSettings!.enabledTranslators.isEmpty) {
+        emit(state.error(const NoTranslatorEnabledException()));
+        return;
+      }
+
       await emit.forEach(
         homeRepository.translateText(
           sourceText,

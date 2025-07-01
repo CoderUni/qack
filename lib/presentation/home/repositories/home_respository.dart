@@ -14,6 +14,7 @@ import 'package:qack/presentation/home/models/base_translation_details.dart';
 import 'package:qack/presentation/home/models/deepseek_chat_completion.dart';
 import 'package:qack/presentation/home/models/deepseek_message.dart';
 import 'package:qack/presentation/home/models/models.dart';
+import 'package:qack/presentation/home/models/youdao_translation.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 import 'package:qack/utils/database/database.dart';
 
@@ -85,6 +86,22 @@ final class HomeRepository {
                   rootIsolateToken,
                   // src and target lang are manually set to auto
                   // in [DeepseekChatCompletion]
+                  srcLanguage: srcLanguage.code ?? Language.auto.code!,
+                  targetLanguage: targetLanguage.code!,
+                  translatorSettings: translatorSettings,
+                ),
+              ),
+            );
+          }
+        case Translator.youDao:
+          if (apiKeys[KeyNameConstants.youDaoAppID] != null &&
+              apiKeys[KeyNameConstants.youDaoSecretKey] != null) {
+            futures.add(
+              Isolate.run(
+                () async => _translateYouDao(
+                  text,
+                  httpClient,
+                  rootIsolateToken,
                   srcLanguage: srcLanguage.code ?? Language.auto.code!,
                   targetLanguage: targetLanguage.code!,
                   translatorSettings: translatorSettings,
@@ -169,7 +186,7 @@ final class HomeRepository {
           .entries
           .map(
             (e) => '${Uri.encodeComponent(e.key)}='
-                '${Uri.encodeComponent(e.value as String)}',
+                '${Uri.encodeComponent('${e.value}')}',
           )
           .join('&');
 
@@ -186,7 +203,7 @@ final class HomeRepository {
         throw FailedBaiduTranslation.fromJson(data);
       }
 
-      return BaiduTranslation.fromJson(response.data as Map<String, dynamic>);
+      return BaiduTranslation.fromJson(data);
     } on Exception catch (e) {
       return BaiduTranslation.error(e);
     }
@@ -239,6 +256,92 @@ final class HomeRepository {
       );
     } on Exception catch (e) {
       return DeepseekChatCompletion.error(e);
+    }
+  }
+
+  Future<YouDaoTranslation> _translateYouDao(
+    String inputText,
+    Http httpClient,
+    RootIsolateToken rootIsolateToken, {
+    required String srcLanguage,
+    required String targetLanguage,
+    required TranslatorSettings translatorSettings,
+  }) async {
+    try {
+      // Initialize platform channel plugins (like http) in the isolate
+      BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+
+      final appID = translatorSettings.apiKeys[KeyNameConstants.youDaoAppID];
+      final secretKey =
+          translatorSettings.apiKeys[KeyNameConstants.youDaoSecretKey];
+
+      if (appID == null || secretKey == null) {
+        throw ArgumentError(
+          'YouDao Translation keys are null. appId: $appID, secretKey: '
+          '$secretKey',
+        );
+      }
+
+      final salt = await storage.read(key: KeyNameConstants.md5Salt);
+      if (salt == null) {
+        throw ArgumentError('YouDao MD5 salt is null');
+      }
+
+      final secondsSinceEpoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+      final request = YouDaoTranslationRequest(
+        inputText: inputText,
+        srcLanguage: srcLanguage,
+        targetLanguage: targetLanguage,
+        appID: appID,
+        salt: salt,
+        secondsSinceEpoch: secondsSinceEpoch,
+      );
+
+      final signature = YouDaoTranslationRequest.createSignJson(
+        appID: appID,
+        inputText: inputText,
+        salt: salt,
+        secondsSinceEpoch: secondsSinceEpoch,
+        secretKey: secretKey,
+      );
+
+      final encodedUrl = request
+          .toJson()
+          .entries
+          .map(
+            (e) => '${Uri.encodeComponent(e.key)}='
+                '${Uri.encodeComponent('${e.value}')}',
+          )
+          .join('&');
+
+      final response = await httpClient.rawGet(
+        Uri.parse('${LinkConstants.youDaoTranslateTextUrl}?$encodedUrl'
+            '&sign=$signature'),
+      );
+
+      if (response.data is! Map<String, dynamic>) {
+        throw Exception(
+          'Unexpected response format from YouDao API: ${response.data}',
+        );
+      }
+
+      final data = response.data as Map<String, dynamic>;
+
+      // YouDao returns '0' (as a string) for success.
+      // Any other value indicates an error.
+      if (data['errorCode'] != '0') {
+        throw FailedYouDaoTranslation.fromJson(data);
+      }
+
+      return YouDaoTranslation.fromJson(data);
+    } on Exception catch (e) {
+      return YouDaoTranslation.error(
+        e,
+        errorCode: 'Caught a general Exception. Not a FailedYouDaoTranslation',
+        langPair: '',
+        query: inputText,
+      );
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:qack/layout/layout_handler.dart';
@@ -176,6 +177,19 @@ class TranslationCardView extends StatelessWidget {
               Padding(
                 padding: translationMargin,
                 child: InkWell(
+                  onLongPress: () {
+                    if (status == HomeStatus.success &&
+                        translationDetails.translatedText != null) {
+                      Clipboard.setData(
+                        ClipboardData(text: translationText),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Copied to clipboard'),
+                        ),
+                      );
+                    }
+                  },
                   onTap: () {
                     if (status == HomeStatus.success &&
                         translationDetails.translatedText != null) {

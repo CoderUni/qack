@@ -10,6 +10,7 @@ part 'history_state.dart';
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   HistoryBloc(this.historyRepository) : super(const HistoryState()) {
     on<HistoryFetched>(_onHistoryFetched);
+    on<HistoryFiltered>(_onHistoryFiltered);
   }
   final HistoryRepository historyRepository;
 
@@ -21,9 +22,22 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       emit(state.loading());
       // Fetch history from the database
       final history = await historyRepository.fetchTranslationHistory();
-      emit(state.success(history));
+
+      emit(state.fetchSuccess(history));
     } on Exception catch (e) {
       emit(state.error(e));
     }
+  }
+
+  void _onHistoryFiltered(
+    HistoryFiltered event,
+    Emitter<HistoryState> emit,
+  ) {
+    final filteredHistory = historyRepository.filterHistory(
+      state.history,
+      event.query,
+    );
+
+    emit(state.filterSuccess(filteredHistory, state.history));
   }
 }

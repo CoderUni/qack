@@ -26,4 +26,32 @@ final class HistoryRepository {
       }).toList(),
     );
   }
+
+  List<TranslationHistory> filterHistory(
+    List<TranslationHistory> history,
+    String query,
+  ) {
+    if (query.isEmpty) return history;
+
+    final queryLower = query.toLowerCase().trim();
+
+    final matchingInput = history.where((entry) {
+      final inputLower = entry.input.toLowerCase();
+      return inputLower.contains(queryLower);
+    }).toList();
+
+    // Include entries where any translation output matches the query
+    // TODO: Rank the outputs based on how well the output matches the query
+    final matchingOutput = history.where((entry) {
+      // ignore: omit_local_variable_types
+      for (final TranslationHistoryItem item in entry.items ?? []) {
+        if (item.output.toLowerCase().contains(queryLower)) {
+          return true;
+        }
+      }
+      return false;
+    }).toList();
+
+    return <TranslationHistory>{...matchingInput, ...matchingOutput}.toList();
+  }
 }

@@ -12,6 +12,23 @@ enum Translator {
   youDao,
 }
 
+extension TranslatorIntExt on int {
+  String toTranslator() {
+    switch (this) {
+      case 0:
+        return Translator.google.name;
+      case 1:
+        return Translator.baidu.name;
+      case 2:
+        return Translator.deepSeek.name;
+      case 3:
+        return Translator.youDao.name;
+      default:
+        throw ArgumentError('Invalid translator index: $this');
+    }
+  }
+}
+
 typedef TranslatorApiKeys = Map<String, String>;
 
 @freezed

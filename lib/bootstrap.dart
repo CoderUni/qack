@@ -7,6 +7,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
 import 'package:qack/constants/key_name.dart';
+import 'package:qack/presentation/history/bloc/history_bloc.dart';
+import 'package:qack/presentation/history/repositories/repositories.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
 import 'package:qack/utils/database/database.dart';
@@ -38,6 +40,7 @@ Future<void> bootstrap(
   FutureOr<Widget> Function(
     FlutterSecureStorage secureStorage,
     SettingsBloc settingsBloc,
+    HistoryBloc historyBloc,
     AppDatabase appDatabase,
   ) builder,
 ) async {
@@ -85,10 +88,15 @@ Future<void> bootstrap(
       SettingsFetch(await settingsRepository.getAPIKey()),
     );
 
+  // Initialize history bloc
+  final historyBloc = HistoryBloc(
+    HistoryRepository(appDatabase: appDatabase),
+  )..add(const HistoryFetched());
+
   // Initialize HTTP repository
   GetIt.instance.registerLazySingleton<Http>(Http.new);
 
   Bloc.observer = const AppBlocObserver();
 
-  runApp(await builder(secureStorage, settingsBloc, appDatabase));
+  runApp(await builder(secureStorage, settingsBloc, historyBloc, appDatabase));
 }

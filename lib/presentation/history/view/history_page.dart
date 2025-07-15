@@ -14,24 +14,19 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HistoryBloc(
-        HistoryRepository(appDatabase: context.read<AppDatabase>()),
-      ),
-      child: const LayoutHandler(
-        mobile: HistoryView(
-          searchBarPadding: EdgeInsets.only(
-            top: 16,
-            left: PaddingConstants.mobileHorizontalMarginValue,
-            right: PaddingConstants.mobileHorizontalMarginValue,
-          ),
+    return const LayoutHandler(
+      mobile: HistoryView(
+        searchBarPadding: EdgeInsets.only(
+          top: 16,
+          left: PaddingConstants.mobileHorizontalMarginValue,
+          right: PaddingConstants.mobileHorizontalMarginValue,
         ),
-        tablet: HistoryView(
-          searchBarPadding: EdgeInsets.only(
-            top: 24,
-            left: PaddingConstants.tabletHorizontalMarginValue,
-            right: PaddingConstants.tabletHorizontalMarginValue,
-          ),
+      ),
+      tablet: HistoryView(
+        searchBarPadding: EdgeInsets.only(
+          top: 24,
+          left: PaddingConstants.tabletHorizontalMarginValue,
+          right: PaddingConstants.tabletHorizontalMarginValue,
         ),
       ),
     );
@@ -48,12 +43,6 @@ class HistoryView extends StatefulWidget {
 }
 
 class _HistoryViewState extends State<HistoryView> {
-  @override
-  void initState() {
-    context.read<HistoryBloc>().add(const HistoryFetched());
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     const theme = LightTheme();

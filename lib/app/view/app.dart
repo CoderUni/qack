@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/gen/fonts.gen.dart';
 import 'package:qack/l10n/arb/app_localizations.dart';
 import 'package:qack/layout/device_info_setter.dart';
+import 'package:qack/presentation/history/bloc/history_bloc.dart';
+import 'package:qack/presentation/history/repositories/repositories.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/repositories/repositories.dart';
 import 'package:qack/presentation/landing/components/cubit/bottom_navigation_bar_cubit.dart';
@@ -18,12 +20,14 @@ class App extends StatelessWidget {
   const App({
     required this.secureStorage,
     required this.settingsBloc,
+    required this.historyBloc,
     required this.appDatabase,
     super.key,
   });
 
   final FlutterSecureStorage secureStorage;
   final SettingsBloc settingsBloc;
+  final HistoryBloc historyBloc;
   final AppDatabase appDatabase;
 
   @override
@@ -40,14 +44,18 @@ class App extends StatelessWidget {
           create: (context) => HomeRepository(storage: secureStorage),
         ),
       ],
-      child: _App(settingsBloc: settingsBloc),
+      child: _App(
+        settingsBloc: settingsBloc,
+        historyBloc: historyBloc,
+      ),
     );
   }
 }
 
 class _App extends StatelessWidget {
-  const _App({required this.settingsBloc});
+  const _App({required this.settingsBloc, required this.historyBloc});
   final SettingsBloc settingsBloc;
+  final HistoryBloc historyBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +68,9 @@ class _App extends StatelessWidget {
             settingsBloc: settingsBloc,
             appDatabase: context.read<AppDatabase>(),
           ),
+        ),
+        BlocProvider(
+          create: (context) => historyBloc,
         ),
         BlocProvider(create: (context) => BottomNavigationBarCubit()),
       ],

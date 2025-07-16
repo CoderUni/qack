@@ -7,6 +7,7 @@ import 'package:qack/layout/device_info_setter.dart';
 import 'package:qack/presentation/history/bloc/history_bloc.dart';
 import 'package:qack/presentation/history/repositories/repositories.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
+import 'package:qack/presentation/home/cubit/word_of_the_day_cubit.dart';
 import 'package:qack/presentation/home/repositories/repositories.dart';
 import 'package:qack/presentation/landing/components/cubit/bottom_navigation_bar_cubit.dart';
 import 'package:qack/presentation/landing/view/landing_page.dart';
@@ -21,6 +22,7 @@ class App extends StatelessWidget {
     required this.secureStorage,
     required this.settingsBloc,
     required this.historyBloc,
+    required this.wordOfTheDayCubit,
     required this.appDatabase,
     super.key,
   });
@@ -28,6 +30,7 @@ class App extends StatelessWidget {
   final FlutterSecureStorage secureStorage;
   final SettingsBloc settingsBloc;
   final HistoryBloc historyBloc;
+  final WordOfTheDayCubit wordOfTheDayCubit;
   final AppDatabase appDatabase;
 
   @override
@@ -47,15 +50,21 @@ class App extends StatelessWidget {
       child: _App(
         settingsBloc: settingsBloc,
         historyBloc: historyBloc,
+        wordOfTheDayCubit: wordOfTheDayCubit,
       ),
     );
   }
 }
 
 class _App extends StatelessWidget {
-  const _App({required this.settingsBloc, required this.historyBloc});
+  const _App({
+    required this.settingsBloc,
+    required this.historyBloc,
+    required this.wordOfTheDayCubit,
+  });
   final SettingsBloc settingsBloc;
   final HistoryBloc historyBloc;
+  final WordOfTheDayCubit wordOfTheDayCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +81,7 @@ class _App extends StatelessWidget {
         BlocProvider(
           create: (context) => historyBloc,
         ),
+        BlocProvider(create: (context) => wordOfTheDayCubit),
         BlocProvider(create: (context) => BottomNavigationBarCubit()),
       ],
       child: const AppView(),

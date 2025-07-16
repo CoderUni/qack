@@ -64,7 +64,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       // translator enabled
       if (settingsBloc.state.translatorSettings == null ||
           settingsBloc.state.translatorSettings!.enabledTranslators.isEmpty) {
-        emit(state.error(const NoTranslatorEnabledException()));
+        emit(state.failure(const NoTranslatorEnabledException()));
         return;
       }
 
@@ -87,12 +87,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         },
         onError: (e, stackTrace) {
           debugPrint('error: $e');
-          return state.error(Exception(e));
+          return state.failure(Exception(e));
         },
       );
     } on Exception catch (e) {
       debugPrint(e.toString());
-      emit(state.error(e));
+      emit(state.failure(e));
     }
   }
 }

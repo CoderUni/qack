@@ -9,6 +9,8 @@ import 'package:http_client/http_client.dart';
 import 'package:qack/constants/key_name.dart';
 import 'package:qack/presentation/history/bloc/history_bloc.dart';
 import 'package:qack/presentation/history/repositories/repositories.dart';
+import 'package:qack/presentation/home/cubit/word_of_the_day_cubit.dart';
+import 'package:qack/presentation/home/repositories/repositories.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/respository/settings_repository.dart';
 import 'package:qack/utils/database/database.dart';
@@ -41,6 +43,7 @@ Future<void> bootstrap(
     FlutterSecureStorage secureStorage,
     SettingsBloc settingsBloc,
     HistoryBloc historyBloc,
+    WordOfTheDayCubit wordOfTheDayCubit,
     AppDatabase appDatabase,
   ) builder,
 ) async {
@@ -52,6 +55,9 @@ Future<void> bootstrap(
 
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
+
+  // Initialize HTTP repository
+  GetIt.instance.registerLazySingleton<Http>(Http.new);
 
   // Initialize local storage repository
   final appDatabase = AppDatabase();
@@ -82,10 +88,13 @@ Future<void> bootstrap(
 
   // Initialize settings bloc
   final settingsRepository = SettingsRepository(storage: secureStorage);
+
+  final translatorSettings = await settingsRepository.getAPIKey();
+
   final settingsBloc = SettingsBloc(
     settingsRepository: settingsRepository,
   )..add(
-      SettingsFetch(await settingsRepository.getAPIKey()),
+      SettingsFetch(translatorSettings),
     );
 
   // Initialize history bloc
@@ -93,10 +102,24 @@ Future<void> bootstrap(
     HistoryRepository(appDatabase: appDatabase),
   )..add(const HistoryFetched());
 
-  // Initialize HTTP repository
-  GetIt.instance.registerLazySingleton<Http>(Http.new);
+  // Initialize word of the day cubit
+  final wordOfTheDayCubit = WordOfTheDayCubit(
+    const WordOfTheDayRepository(),
+    deepSeekApiKey: translatorSettings.apiKeys[KeyNameConstants.deepSeek],
+    // ignore: unawaited_futures
+  );
+
+  await wordOfTheDayCubit.fetchWordOfTheDay();
 
   Bloc.observer = const AppBlocObserver();
 
-  runApp(await builder(secureStorage, settingsBloc, historyBloc, appDatabase));
+  runApp(
+    await builder(
+      secureStorage,
+      settingsBloc,
+      historyBloc,
+      wordOfTheDayCubit,
+      appDatabase,
+    ),
+  );
 }

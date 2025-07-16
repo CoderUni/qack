@@ -128,7 +128,7 @@ class TranslationCardView extends StatelessWidget {
           translationText = 'Loading...';
         } else if (translationDetails.status == TranslationStatus.success) {
           translationText = translationDetails.translatedText!.outputText;
-        } else if (translationDetails.status == TranslationStatus.error ||
+        } else if (translationDetails.status == TranslationStatus.failure ||
             translationDetails.exception != null) {
           translationText =
               'Translation error: ${translationDetails.exception}';

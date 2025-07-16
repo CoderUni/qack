@@ -41,7 +41,7 @@ final class HomeState extends Equatable {
   /// This error is a general error in [HomeRepository]'s translateText method.
   /// It is not a translation error.
   /// See [BaseTranslationError] for translation errors.
-  HomeState error(Exception e) => HomeState._(
+  HomeState failure(Exception e) => HomeState._(
         translationDetails: translationDetails,
         status: HomeStatus.error,
         exception: e,

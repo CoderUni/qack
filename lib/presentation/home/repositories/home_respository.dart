@@ -209,7 +209,7 @@ final class HomeRepository {
     }
   }
 
-  Future<DeepseekChatCompletion> _askDeepseek(
+  Future<DeepseekTranslation> _askDeepseek(
     String inputText,
     Http httpClient,
     RootIsolateToken rootIsolateToken, {
@@ -251,11 +251,15 @@ final class HomeRepository {
         },
       );
 
-      return DeepseekChatCompletion.fromJson(
-        response.data as Map<String, dynamic>,
+      return DeepseekTranslation(
+        DeepseekChatCompletion.fromJson(
+          response.data as Map<String, dynamic>,
+        ),
       );
     } on Exception catch (e) {
-      return DeepseekChatCompletion.error(e);
+      return DeepseekTranslation(
+        DeepseekChatCompletion.error(e),
+      );
     }
   }
 

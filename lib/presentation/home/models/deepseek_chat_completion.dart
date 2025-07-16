@@ -22,8 +22,15 @@ enum DeepSeekResponseFormat {
   json,
 }
 
+enum DeepSeekStatus {
+  initial,
+  loading,
+  success,
+  failure,
+}
+
 @JsonSerializable()
-final class DeepseekChatCompletion extends BaseTranslationDetails {
+final class DeepseekChatCompletion {
   DeepseekChatCompletion({
     required this.id,
     required this.object,
@@ -32,21 +39,13 @@ final class DeepseekChatCompletion extends BaseTranslationDetails {
     required this.model,
     required this.systemFingerprint,
     required this.usage,
-    TranslationStatus status = TranslationStatus.success,
-    Exception? exception,
-  }) : super(
-          srcLanguage: 'auto',
-          targetLanguage: 'auto',
-          translatedText: TranslatedText(
-            outputText: choices[0].message.content ?? 'Error',
-          ),
-          status: status,
-          exception: exception,
-        );
+    this.status = DeepSeekStatus.success,
+    this.exception,
+  });
 
   DeepseekChatCompletion.loading()
       : this(
-          status: TranslationStatus.loading,
+          status: DeepSeekStatus.loading,
           id: 'loading',
           object: 'loading',
           completionTime: 0,
@@ -64,7 +63,7 @@ final class DeepseekChatCompletion extends BaseTranslationDetails {
 
   DeepseekChatCompletion.error(Exception e)
       : this(
-          status: TranslationStatus.error,
+          status: DeepSeekStatus.failure,
           id: 'err',
           object: 'err',
           completionTime: 0,
@@ -104,6 +103,12 @@ final class DeepseekChatCompletion extends BaseTranslationDetails {
 
   @JsonKey(name: 'usage', includeToJson: false)
   final DeepSeekUsage usage;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final DeepSeekStatus status;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final Exception? exception;
 
   /// This should not be implemented since the toJson method is not used in the
   /// DeepSeekTranslation class.

@@ -7,7 +7,7 @@ import 'package:qack/presentation/settings/models/models.dart';
 /// Contains all the enabled translators and their translated output.
 typedef TranslationDetails = Map<Translator, BaseTranslationDetails>;
 
-enum TranslationStatus { initial, loading, success, error }
+enum TranslationStatus { initial, loading, success, failure }
 
 /// {@template base_translation_details}
 /// Base class for translation details.

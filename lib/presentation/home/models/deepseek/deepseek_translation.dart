@@ -1,5 +1,5 @@
 import 'package:qack/presentation/home/models/base_translation_details.dart';
-import 'package:qack/presentation/home/models/deepseek_chat_completion.dart';
+import 'package:qack/presentation/home/models/deepseek/deepseek_chat_completion.dart';
 
 final class DeepseekTranslation extends BaseTranslationDetails {
   DeepseekTranslation(this.deepseekChatCompletion)

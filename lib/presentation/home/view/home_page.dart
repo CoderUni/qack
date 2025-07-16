@@ -7,7 +7,7 @@ import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/home/components/components.dart';
 import 'package:qack/presentation/home/cubit/word_of_the_day_cubit.dart';
-import 'package:qack/presentation/home/models/word_of_the_day.dart';
+import 'package:qack/presentation/home/models/word_of_the_day/word_of_the_day.dart';
 import 'package:qack/theme/theme.dart';
 import 'package:qack/widgets/input/input.dart';
 

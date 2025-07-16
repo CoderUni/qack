@@ -5,7 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qack/constants/constants.dart';
 import 'package:qack/presentation/home/models/base_translation_details.dart';
-import 'package:qack/presentation/home/models/deepseek_message.dart';
+import 'package:qack/presentation/home/models/deepseek/deepseek_message.dart';
 
 part 'deepseek_chat_completion.g.dart';
 

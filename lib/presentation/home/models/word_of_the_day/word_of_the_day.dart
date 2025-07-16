@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:qack/presentation/home/models/example_sentence.dart';
+import 'package:qack/presentation/home/models/word_of_the_day/example_sentence.dart';
 
 part 'word_of_the_day.g.dart';
 

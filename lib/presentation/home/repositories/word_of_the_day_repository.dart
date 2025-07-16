@@ -36,11 +36,7 @@ final class WordOfTheDayRepository {
         DeepSeekUserMessage(
           // TODO: Feed with stuff from user's translation or dictionary
           // history
-          uContent: 'Use millisecond timestamp as nonce. Return raw '
-              'JSON:{"word":...,"pinyin":...,"definitions":[...],'
-              '"exampleSentences":[{"sentence":...,"pinyin":...,'
-              '"translation":...}]}'
-              'Pick a new advanced but common Chinese word each run',
+          uContent: LLMPromptConstants.wordOfTheDayPrompt,
         ),
       ],
       responseFormat: DeepSeekResponseFormat.string,

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qack/presentation/home/models/models.dart';
-import 'package:qack/presentation/home/models/youdao_translation.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 
 /// Contains all the enabled translators and their translated output.
@@ -125,7 +124,7 @@ extension BaseTranslationX on BaseTranslationDetails {
   Translator get translatorName {
     if (this is BaiduTranslation) {
       return Translator.baidu;
-    } else if (this is DeepseekChatCompletion) {
+    } else if (this is DeepseekTranslation) {
       return Translator.deepSeek;
     } else if (this is YouDaoTranslation) {
       return Translator.youDao;
@@ -137,7 +136,7 @@ extension BaseTranslationX on BaseTranslationDetails {
   String get svgPath {
     if (this is BaiduTranslation) {
       return 'assets/images/baidu_icon.svg.vec';
-    } else if (this is DeepseekChatCompletion) {
+    } else if (this is DeepseekTranslation) {
       return 'assets/images/deepseek_icon.svg.vec';
     } else if (this is YouDaoTranslation) {
       return 'assets/images/youdao_icon.svg.vec';

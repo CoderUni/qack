@@ -8,7 +8,7 @@ final class DeepseekTranslation extends BaseTranslationDetails {
           targetLanguage: 'auto',
           translatedText: TranslatedText(
             outputText:
-                deepseekChatCompletion.choices[0].message.content ?? 'Error',
+                deepseekChatCompletion.choices.first.message.content ?? 'Error',
           ),
           status: _toTranslationStatus(deepseekChatCompletion.status),
           exception: deepseekChatCompletion.exception,

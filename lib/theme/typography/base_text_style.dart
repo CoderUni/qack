@@ -14,3 +14,10 @@ abstract class BaseTextStyle {
   /// Bold font weight
   TextStyle get bold;
 }
+
+extension TextStyleExt on TextStyle {
+  /// Returns a [TextStyle] with the specified font size
+  TextStyle get withChineseLetterSpacing {
+    return copyWith(letterSpacing: (letterSpacing ?? 0) + 0.5);
+  }
+}

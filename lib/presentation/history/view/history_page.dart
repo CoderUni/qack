@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qack/constants/constants.dart';
 import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/history/bloc/history_bloc.dart';
-import 'package:qack/presentation/history/repositories/history_repository.dart';
-import 'package:qack/presentation/settings/models/translator_details.dart';
+import 'package:qack/presentation/history/components/history_list_tile.dart';
 import 'package:qack/theme/theme.dart';
-import 'package:qack/utils/database/database.dart';
 import 'package:qack/widgets/input/input.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -62,46 +60,38 @@ class _HistoryViewState extends State<HistoryView> {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: BlocBuilder<HistoryBloc, HistoryState>(
                 buildWhen: (previous, current) =>
                     current.status != HistoryStatus.loading,
                 builder: (context, state) {
+                  if (state.status == HistoryStatus.error) {
+                    return Center(
+                      child: Text(
+                        'Failed to load history',
+                        style: AppTextStyle.displayXS.medium.copyWith(
+                          color: theme.errorColor,
+                        ),
+                      ),
+                    );
+                  } else if (state.history.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No history available',
+                        style: AppTextStyle.displayXS.medium.copyWith(
+                          color: theme.textColor1,
+                        ),
+                      ),
+                    );
+                  }
+
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        if (state.status == HistoryStatus.error) {
-                          return Center(
-                            child: Text(
-                              'Failed to load history',
-                              // TODO: Change the textstyle
-                              style: AppTextStyle.textMD.medium.copyWith(
-                                color: theme.errorColor,
-                              ),
-                            ),
-                          );
-                        } else if (state.filteredHistory.isEmpty) {
-                          // TODO: only show this text if history and filter
-                          // are empty
-                          return const Center(
-                            child: Text('No history available'),
-                          );
-                        }
-
                         // Temporary history
                         final translationHistory = state.filteredHistory[index];
-                        return ListTile(
-                          title: Text(translationHistory.input),
-                          subtitle: Text(
-                            translationHistory.items
-                                    ?.map(
-                                      (item) =>
-                                          '${item.translator.toTranslator()}: '
-                                          '${item.output}',
-                                    )
-                                    .join('\n\n') ??
-                                '',
-                          ),
+                        return HistoryListTile(
+                          translationHistory: translationHistory,
                         );
                       },
                       childCount: state.filteredHistory.length,

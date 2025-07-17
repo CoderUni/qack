@@ -107,9 +107,7 @@ Future<void> bootstrap(
     const WordOfTheDayRepository(),
     deepSeekApiKey: translatorSettings.apiKeys[KeyNameConstants.deepSeek],
     // ignore: unawaited_futures
-  );
-
-  await wordOfTheDayCubit.fetchWordOfTheDay();
+  )..fetchWordOfTheDay();
 
   Bloc.observer = const AppBlocObserver();
 

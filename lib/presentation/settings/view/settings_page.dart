@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:qack/layout/layout_handler.dart' show LayoutHandler;
+import 'package:qack/presentation/settings/components/edit_settings_list_tile.dart';
 import 'package:qack/presentation/settings/view/edit_translator_page.dart';
+import 'package:qack/theme/theme.dart';
+import 'package:qack/utils/routes/routes.dart';
+import 'package:qack/widgets/widgets.dart';
 /*
 import 'package:gap/gap.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -10,16 +17,6 @@ import 'package:qack/utils/routes/slide_transition.dart';
 import 'package:qack/widgets/divider.dart';
 */
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const EditTranslatorPage();
-  }
-}
-
-/*
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -114,4 +111,3 @@ class SettingsView extends StatelessWidget {
     );
   }
 }
-*/

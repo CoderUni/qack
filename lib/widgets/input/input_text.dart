@@ -75,11 +75,23 @@ class InputText extends StatelessWidget {
       maxLength: maxLength,
       focusNode: focusNode,
       style: AppTextStyle.textMD.regular.copyWith(color: theme.textColor1),
+      cursorColor: inputTextTheme.cursorColor,
       decoration: InputDecoration(
         alignLabelWithHint: false,
         border: const OutlineInputBorder(),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: inputTextTheme.borderSideColor),
+          borderRadius: BorderRadius.circular(4),
+          borderSide: BorderSide(
+            color: inputTextTheme.borderSideColor,
+            width: 1.5,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: BorderSide(
+            color: inputTextTheme.focusedBorderSideColor,
+            width: 1.5,
+          ),
         ),
         counterText: counterText,
         labelText: labelText,
@@ -118,6 +130,9 @@ class InputText extends StatelessWidget {
             }
             return null;
           },
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
     );
   }
 }

@@ -1,17 +1,25 @@
 import 'package:qack/presentation/home/models/base_translation_details.dart';
 import 'package:qack/presentation/home/models/deepseek/deepseek_chat_completion.dart';
 
-final class DeepseekTranslation extends BaseTranslationDetails {
-  DeepseekTranslation(this.deepseekChatCompletion)
+final class DeepSeekTranslation extends BaseTranslationDetails {
+  DeepSeekTranslation(this.deepseekChatCompletion, {TranslationStatus? status})
       : super(
           srcLanguage: 'auto',
           targetLanguage: 'auto',
           translatedText: TranslatedText(
-            outputText:
-                deepseekChatCompletion.choices.first.message.content ?? 'Error',
+            outputText: deepseekChatCompletion.choices.isEmpty
+                ? 'Empty response'
+                : deepseekChatCompletion.choices.first.message.content ??
+                    'Error',
           ),
-          status: _toTranslationStatus(deepseekChatCompletion.status),
+          status: status ?? _toTranslationStatus(deepseekChatCompletion.status),
           exception: deepseekChatCompletion.exception,
+        );
+
+  DeepSeekTranslation.loading()
+      : this(
+          DeepseekChatCompletion.loading(),
+          status: TranslationStatus.loading,
         );
 
   final DeepseekChatCompletion deepseekChatCompletion;

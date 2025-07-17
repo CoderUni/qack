@@ -78,6 +78,9 @@ final class HomeRepository {
           }
         case Translator.deepSeek:
           if (apiKeys[KeyNameConstants.deepSeek] != null) {
+            // Add a loading status for slow translators like deepseek
+            yield DeepSeekTranslation.loading();
+
             futures.add(
               Isolate.run(
                 () async => _askDeepseek(
@@ -129,8 +132,9 @@ final class HomeRepository {
             TranslationHistoryItemCompanion(
               parentID: Value(historyId),
               translator: Value(translationDetails.translatorName.index),
-              output:
-                  Value(translationDetails.translatedText?.outputText ?? ''),
+              output: Value(
+                translationDetails.translatedText?.outputText.trim() ?? '',
+              ),
             ),
           );
     }
@@ -209,7 +213,7 @@ final class HomeRepository {
     }
   }
 
-  Future<DeepseekTranslation> _askDeepseek(
+  Future<DeepSeekTranslation> _askDeepseek(
     String inputText,
     Http httpClient,
     RootIsolateToken rootIsolateToken, {
@@ -251,13 +255,13 @@ final class HomeRepository {
         },
       );
 
-      return DeepseekTranslation(
+      return DeepSeekTranslation(
         DeepseekChatCompletion.fromJson(
           response.data as Map<String, dynamic>,
         ),
       );
     } on Exception catch (e) {
-      return DeepseekTranslation(
+      return DeepSeekTranslation(
         DeepseekChatCompletion.error(e),
       );
     }

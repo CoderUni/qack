@@ -93,37 +93,40 @@ abstract class AppColors {
   static const grayTrue900 = Color(0xFF141414);
 
   /// Primary 25
-  static const primary25 = Color(0xFFF5F8FF);
+  static const primary25 = blueDark25;
 
   /// Primary 50
-  static const primary50 = Color(0xFFEFF4FF);
+  static const primary50 = blueDark50;
 
   /// Primary 100
-  static const primary100 = Color(0xFFD1E0FF);
+  static const primary100 = blueDark100;
 
   /// Primary 200
-  static const primary200 = Color(0xFFB2CCFF);
+  static const primary200 = blueDark200;
 
   /// Primary 300
-  static const primary300 = Color(0xFF84ADFF);
+  static const primary300 = blueDark300;
 
   /// Primary 400
-  static const primary400 = Color(0xFF528BFF);
+  static const primary400 = blueDark400;
+
+  /// Primary 450
+  static const primary450 = blueDark450;
 
   /// Primary 500
-  static const primary500 = Color(0xFF2970FF);
+  static const primary500 = blueDark500;
 
   /// Primary 600
-  static const primary600 = Color(0xFF155EEF);
+  static const primary600 = blueDark600;
 
   /// Primary 700
-  static const primary700 = Color(0xFF004EEB);
+  static const primary700 = blueDark700;
 
   /// Primary 800
-  static const primary800 = Color(0xFF0040C1);
+  static const primary800 = blueDark800;
 
   /// Primary 900
-  static const primary900 = Color(0xFF00359E);
+  static const primary900 = blueDark900;
 
   /// Error 25
   static const error25 = Color(0xFFFFFBFA);
@@ -274,6 +277,9 @@ abstract class AppColors {
 
   /// Blue Dark 400
   static const blueDark400 = Color(0xFF528BFF);
+
+  /// Blue Dark 450
+  static const blueDark450 = Color(0xFF498FFF);
 
   /// Blue Dark 500
   static const blueDark500 = Color(0xFF2970FF);

@@ -83,13 +83,16 @@ class TranslationHistoryItem extends Equatable {
     String json,
   ) {
     final jsonList = jsonDecode(json) as List<dynamic>?;
-    return jsonList != null
-        ? jsonList
-            .map(
-              (json) =>
-                  TranslationHistoryItem.fromJson(json as Map<String, dynamic>),
-            )
-            .toList()
-        : [];
+
+    // Skip individual translations with empty outputs
+    return jsonList
+            ?.map((json) {
+              final item =
+                  TranslationHistoryItem.fromJson(json as Map<String, dynamic>);
+              return item.output.isNotEmpty ? item : null;
+            })
+            .whereType<TranslationHistoryItem>()
+            .toList() ??
+        [];
   }
 }

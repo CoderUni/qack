@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
@@ -10,6 +11,7 @@ import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/models/models.dart';
 import 'package:qack/utils/database/database.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -86,12 +88,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           return state.success(translationDetails);
         },
         onError: (e, stackTrace) {
-          debugPrint('error: $e');
+          log('error: $e, stackTrace: $stackTrace');
+          // Log error to Sentry
+          Sentry.captureException(e, stackTrace: stackTrace);
           return state.failure(Exception(e));
         },
       );
     } on Exception catch (e) {
-      debugPrint(e.toString());
+      log(e.toString());
+      unawaited(Sentry.captureException(e));
       emit(state.failure(e));
     }
   }

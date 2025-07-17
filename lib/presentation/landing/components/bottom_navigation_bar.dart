@@ -130,6 +130,20 @@ class _BottomNavBar extends StatelessWidget {
                 ),
                 BottomBarItem(
                   icon: Icon(
+                    EvaIcons.bookOutline,
+                    size: iconSize,
+                  ),
+                  title: const Text(
+                    'Dictionary',
+                  ),
+                  activeColor: navigationThemeData.activeDictionaryColor,
+                  activeTitleColor:
+                      navigationThemeData.activeDictionaryTitleColor,
+                  inactiveColor:
+                      navigationThemeData.inactiveNavigationTitleColor,
+                ),
+                BottomBarItem(
+                  icon: Icon(
                     EvaIcons.settings2Outline,
                     size: iconSize,
                   ),

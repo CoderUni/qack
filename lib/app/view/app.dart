@@ -105,6 +105,7 @@ class _AppViewState extends State<AppView> {
     return Listener(
       onPointerDown: (_) => FocusManager().primaryFocus?.unfocus(),
       child: MaterialApp(
+        color: theme.primaryColor,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           appBarTheme: AppBarTheme(
@@ -120,7 +121,7 @@ class _AppViewState extends State<AppView> {
           ),
           scaffoldBackgroundColor: theme.scaffoldColor,
           cardColor: theme.cardColor,
-          primaryColor: AppColors.primary500,
+          primaryColor: AppColors.primary450,
         ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

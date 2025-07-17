@@ -124,7 +124,7 @@ extension BaseTranslationX on BaseTranslationDetails {
   Translator get translatorName {
     if (this is BaiduTranslation) {
       return Translator.baidu;
-    } else if (this is DeepseekTranslation) {
+    } else if (this is DeepSeekTranslation) {
       return Translator.deepSeek;
     } else if (this is YouDaoTranslation) {
       return Translator.youDao;
@@ -136,7 +136,7 @@ extension BaseTranslationX on BaseTranslationDetails {
   String get svgPath {
     if (this is BaiduTranslation) {
       return 'assets/images/baidu_icon.svg.vec';
-    } else if (this is DeepseekTranslation) {
+    } else if (this is DeepSeekTranslation) {
       return 'assets/images/deepseek_icon.svg.vec';
     } else if (this is YouDaoTranslation) {
       return 'assets/images/youdao_icon.svg.vec';

@@ -12,6 +12,8 @@ class NavigationThemeData {
     required this.activeHomeTitleColor,
     required this.activeHistoryColor,
     required this.activeHistoryTitleColor,
+    required this.activeDictionaryColor,
+    required this.activeDictionaryTitleColor,
     required this.activeSettingsColor,
     required this.activeSettingsTitleColor,
     required this.sideNavigationBarShadow,
@@ -34,6 +36,12 @@ class NavigationThemeData {
 
   /// Active color of history navigation title
   final Color activeHistoryTitleColor;
+
+  /// Active color of dictionary navigation item
+  final Color activeDictionaryColor;
+
+  /// Active color of dictionary navigation title
+  final Color activeDictionaryTitleColor;
 
   /// Active color of settings navigation item
   final Color activeSettingsColor;

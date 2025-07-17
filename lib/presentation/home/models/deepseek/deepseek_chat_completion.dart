@@ -49,7 +49,18 @@ final class DeepseekChatCompletion {
           id: 'loading',
           object: 'loading',
           completionTime: 0,
-          choices: [],
+          choices: [
+            const DeepSeekChoice(
+              finishReason: 'default loading value',
+              index: 0,
+              message: DeepSeekChatResponseMessage(
+                content: 'Loading...',
+                toolCalls: null,
+                role: 'default loading value',
+              ),
+              logprobs: null,
+            ),
+          ],
           model: 'loading',
           systemFingerprint: 'loading',
           usage: const DeepSeekUsage(

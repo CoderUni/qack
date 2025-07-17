@@ -13,16 +13,16 @@ enum Translator {
 }
 
 extension TranslatorIntExt on int {
-  String toTranslator() {
+  Translator toTranslator() {
     switch (this) {
       case 0:
-        return Translator.google.name;
+        return Translator.google;
       case 1:
-        return Translator.baidu.name;
+        return Translator.baidu;
       case 2:
-        return Translator.deepSeek.name;
+        return Translator.deepSeek;
       case 3:
-        return Translator.youDao.name;
+        return Translator.youDao;
       default:
         throw ArgumentError('Invalid translator index: $this');
     }

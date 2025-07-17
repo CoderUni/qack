@@ -127,7 +127,8 @@ class TranslationCardView extends StatelessWidget {
         if (translationDetails.status == TranslationStatus.loading) {
           translationText = 'Loading...';
         } else if (translationDetails.status == TranslationStatus.success) {
-          translationText = translationDetails.translatedText!.outputText;
+          translationText =
+              translationDetails.translatedText!.outputText.trim();
         } else if (translationDetails.status == TranslationStatus.failure ||
             translationDetails.exception != null) {
           translationText =
@@ -148,7 +149,7 @@ class TranslationCardView extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.cardColor,
           boxShadow: theme.cardShadow,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Padding(
           padding: cardPadding,
@@ -168,7 +169,7 @@ class TranslationCardView extends StatelessWidget {
                   ),
                   Gap(titleGap),
                   Text(
-                    translator.name,
+                    translator.translatorName,
                     style: titleStyle,
                   ),
                   const Spacer(),

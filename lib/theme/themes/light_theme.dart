@@ -75,6 +75,7 @@ final class LightTheme extends BaseTheme {
   @override
   InputTextThemeData get inputTextThemeData => const InputTextThemeData(
         borderSideColor: Color(0x40000000),
+        focusedBorderSideColor: AppColors.primary500,
         iconColor: Color(0x99000000),
         errorColor: AppColors.error600,
       );
@@ -94,6 +95,8 @@ final class LightTheme extends BaseTheme {
         activeHomeTitleColor: AppColors.primary700,
         activeHistoryColor: AppColors.green500,
         activeHistoryTitleColor: AppColors.green600,
+        activeDictionaryColor: AppColors.purple500,
+        activeDictionaryTitleColor: AppColors.purple600,
         activeSettingsColor: AppColors.orange500,
         activeSettingsTitleColor: AppColors.orange600,
         sideNavigationBarShadow: AppShadows.md(),

@@ -12,6 +12,7 @@ import 'package:qack/presentation/home/components/components.dart';
 import 'package:qack/presentation/home/components/translation_input_text.dart';
 import 'package:qack/presentation/home/cubit/translation_input_text_cubit.dart';
 import 'package:qack/presentation/home/cubit/word_of_the_day_cubit.dart';
+import 'package:qack/presentation/home/models/models.dart';
 import 'package:qack/presentation/home/models/word_of_the_day/word_of_the_day.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/theme/theme.dart';
@@ -98,7 +99,9 @@ class HomeView extends StatelessWidget {
             sliver: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 if (state.status == HomeStatus.initial ||
-                    state.status == HomeStatus.empty) {
+                    state.status == HomeStatus.empty ||
+                    (state.method == HomeMethod.textCleared &&
+                        state.translationDetails.isEmpty)) {
                   final translatorSettings =
                       context.read<SettingsBloc>().state.translatorSettings;
                   if (translatorSettings != null &&
@@ -119,7 +122,7 @@ class HomeView extends StatelessWidget {
                             ),
                           );
                         }
-                    
+
                         if (state.history.isEmpty) {
                           return SliverToBoxAdapter(
                             child: Center(
@@ -132,7 +135,7 @@ class HomeView extends StatelessWidget {
                             ),
                           );
                         }
-                    
+
                         return SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
@@ -186,6 +189,19 @@ class HomeView extends StatelessWidget {
                     ),
                   );
                 } else if (state.status == HomeStatus.error) {
+                  if (state.exception is NoTranslatorEnabledException) {
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          'Go to the settings page to enable a translator '
+                          'service.',
+                          style: AppTextStyle.displayXS.medium.copyWith(
+                            color: theme.errorColor,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {

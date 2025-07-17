@@ -25,11 +25,17 @@ final class SettingsEditTranslator extends SettingsEvent {
     required this.deepSeekApiKey,
     required this.youDaoAppID,
     required this.youDaoSecretKey,
+    this.onTranslatorSettingsChanged,
   });
 
   final GlobalKey<FormState> formKey;
 
   final List<Translator> enabledTranslators;
+
+  /// Callback to notify when the translator settings are changed.
+  /// This is used to update the UI in other pages that rely on
+  /// the translator settings.
+  final void Function(List<Translator>)? onTranslatorSettingsChanged;
 
   // Google api keys
   final String? googleApiKey;

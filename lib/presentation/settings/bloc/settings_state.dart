@@ -16,14 +16,11 @@ final class SettingsInitial extends SettingsState {
 }
 
 final class SettingsFetchLoading extends SettingsState {
-  const SettingsFetchLoading();
+  const SettingsFetchLoading(super.translatorSettings);
 }
 
 final class SettingsFetchSuccess extends SettingsState {
   const SettingsFetchSuccess(super.translatorSettings);
-
-  @override
-  List<Object?> get props => [translatorSettings];
 }
 
 /// The existing api key is unchanged if a failure occurs.
@@ -36,14 +33,11 @@ final class SettingsFetchFailure extends SettingsState {
 }
 
 final class SettingsEditTranslatorLoading extends SettingsState {
-  const SettingsEditTranslatorLoading();
+  const SettingsEditTranslatorLoading(super.translatorSettings);
 }
 
 final class SettingsEditTranslatorSuccess extends SettingsState {
   const SettingsEditTranslatorSuccess(super.translatorSettings);
-
-  @override
-  List<Object?> get props => [translatorSettings];
 }
 
 /// Failed to save translator settings.

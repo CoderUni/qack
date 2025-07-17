@@ -24,3 +24,13 @@ final class HomeTextChanged extends HomeEvent {
   @override
   List<Object?> get props => [sourceText];
 }
+
+final class HomeTranslatorRemoved extends HomeEvent {
+  const HomeTranslatorRemoved(this.removedTranslators);
+
+  /// List of translators whose API keys were removed from the settings.
+  final List<Translator> removedTranslators;
+
+  @override
+  List<Object?> get props => [removedTranslators];
+}

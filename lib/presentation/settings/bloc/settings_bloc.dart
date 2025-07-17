@@ -28,7 +28,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           SettingsFetchSuccess(event.translatorSettings),
         );
       } else {
-        emit(const SettingsFetchLoading());
+        emit(SettingsFetchLoading(state.translatorSettings));
 
         final translatorSettings = await settingsRepository.getAPIKey();
 
@@ -54,7 +54,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         return;
       }
 
-      emit(const SettingsEditTranslatorLoading());
+      emit(SettingsEditTranslatorLoading(state.translatorSettings));
 
       // Load all the keys in to the apiKeys map
       final apiKeys = <String, String>{
@@ -79,6 +79,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       await settingsRepository.saveAPIKey(
         translatorSettings: translatorSettings,
       );
+
+      // Check which translators are removed
+      final removedTranslators = state.translatorSettings?.enabledTranslators
+              .where(
+                (translator) => !event.enabledTranslators.contains(translator),
+              )
+              .toList() ??
+          [];
+
+      event.onTranslatorSettingsChanged?.call(removedTranslators);
 
       emit(
         SettingsEditTranslatorSuccess(translatorSettings),

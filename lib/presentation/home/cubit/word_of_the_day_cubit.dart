@@ -7,19 +7,16 @@ import 'package:qack/presentation/home/repositories/repositories.dart';
 part 'word_of_the_day_state.dart';
 
 class WordOfTheDayCubit extends Cubit<WordOfTheDayState> {
-  WordOfTheDayCubit(this.wordOfTheDayRepository, {required this.deepSeekApiKey})
+  WordOfTheDayCubit(this.wordOfTheDayRepository)
       : super(const WordOfTheDayInitial());
   final WordOfTheDayRepository wordOfTheDayRepository;
-  final String? deepSeekApiKey;
 
-  Future<void> fetchWordOfTheDay() async {
+  Future<void> fetch(String deepSeekApiKey) async {
     try {
-      if (deepSeekApiKey != null && deepSeekApiKey!.isNotEmpty) {
-        final wordOfTheDay =
-            await wordOfTheDayRepository.fetchWordOfTheDay(deepSeekApiKey!);
+      final wordOfTheDay =
+          await wordOfTheDayRepository.fetchWordOfTheDay(deepSeekApiKey);
 
-        emit(WordOfTheDaySuccess(wordOfTheDay));
-      }
+      emit(WordOfTheDaySuccess(wordOfTheDay));
     } on Exception catch (e) {
       emit(WordOfTheDayFailure(e));
     }

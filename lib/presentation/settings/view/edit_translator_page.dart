@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qack/constants/constants.dart';
 import 'package:qack/layout/layout_handler.dart';
+import 'package:qack/presentation/home/bloc/home_bloc.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/cubit/enable_translator_cubit.dart';
 import 'package:qack/presentation/settings/models/models.dart';
@@ -170,6 +171,12 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                       deepSeekApiKey: deepSeekApiKeyController.text.trim(),
                       youDaoAppID: youDaoAppIDController.text.trim(),
                       youDaoSecretKey: youDaoSecretKeyController.text.trim(),
+                      onTranslatorSettingsChanged:
+                          (List<Translator> removedTranslators) {
+                        context.read<HomeBloc>().add(
+                              HomeTranslatorRemoved(removedTranslators),
+                            );
+                      },
                     ),
                   );
             },

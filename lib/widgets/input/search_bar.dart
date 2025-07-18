@@ -128,6 +128,9 @@ class _BaseSearchBar extends StatelessWidget {
                     hintText: hintText,
                     hintStyle: hintStyle,
                   ),
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                 ),
               ),
             ],

@@ -66,20 +66,24 @@ class _HistoryViewState extends State<HistoryView> {
                     current.status != HistoryStatus.loading,
                 builder: (context, state) {
                   if (state.status == HistoryStatus.error) {
-                    return Center(
-                      child: Text(
-                        'Failed to load history',
-                        style: AppTextStyle.displayXS.medium.copyWith(
-                          color: theme.errorColor,
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          'Failed to load history',
+                          style: AppTextStyle.displayXS.medium.copyWith(
+                            color: theme.errorColor,
+                          ),
                         ),
                       ),
                     );
                   } else if (state.history.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'No history available',
-                        style: AppTextStyle.displayXS.medium.copyWith(
-                          color: theme.textColor1,
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          'No history available',
+                          style: AppTextStyle.displayXS.medium.copyWith(
+                            color: theme.textColor1,
+                          ),
                         ),
                       ),
                     );

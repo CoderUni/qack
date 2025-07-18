@@ -29,11 +29,11 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
   }
 
-  void _onHistoryFiltered(
+  Future<void> _onHistoryFiltered(
     HistoryFiltered event,
     Emitter<HistoryState> emit,
-  ) {
-    final filteredHistory = historyRepository.filterHistory(
+  ) async {
+    final filteredHistory = await historyRepository.filterHistory(
       state.history,
       event.query,
     );

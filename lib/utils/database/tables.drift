@@ -1,28 +1,87 @@
+-- 1) —— Translation tables —— 
 
 -- translation history table
-CREATE TABLE translationHistory(
+CREATE TABLE IF NOT EXISTS translationHistory(
     id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
     createdAt TEXT NOT NULL,
     input TEXT NOT NULL
 );
 
--- history operations
-
-
 -- translation history items
-CREATE TABLE translationHistoryItem(
-    id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
-    parentID INT NOT NULL REFERENCES translationHistory (id),
-    translator INT NOT NULL,
-    output TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS translationHistoryItem (
+  id         INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+  parentID   INT NOT NULL REFERENCES translationHistory(id) ON DELETE CASCADE,
+  translator INT NOT NULL,
+  output     TEXT    NOT NULL
 );
 
--- translation history items indexes
-CREATE INDEX translationHistoryItemParentIDIndex ON translationHistoryItem (parentID);
+-- 2) —— History FTS5 virtual tables ——
 
-CREATE VIRTUAL TABLE translationHistoryItemFTS USING fts5(translator);
+-- For fast searching of translationHistory.input
+CREATE VIRTUAL TABLE IF NOT EXISTS translationHistoryFTS
+USING fts5(
+  input,
+  content='translationHistory',
+  content_rowid='id',
+  tokenize = 'unicode61 remove_diacritics 2'
+);
 
--- translation history items operations
+-- For fast searching of translationHistoryItem.output
+CREATE VIRTUAL TABLE IF NOT EXISTS translationHistoryItemFTS
+USING fts5(
+  output,
+  content='translationHistoryItem',
+  content_rowid='id',
+  tokenize = 'unicode61 remove_diacritics 2'
+);
+
+-- 3) —— History indexes and triggers to keep FTS indexes in sync —— 
+
+-- tranlation indexes for LIKE queries
+CREATE INDEX IF NOT EXISTS idx_translationHistory_input ON translationHistory(input);
+CREATE INDEX IF NOT EXISTS idx_translationHistoryItem_output ON translationHistoryItem(output);
+
+-- translationHistory ↔ translationHistoryFTS
+CREATE TRIGGER IF NOT EXISTS th_ai
+AFTER INSERT ON translationHistory BEGIN
+  INSERT INTO translationHistoryFTS(rowid, input)
+    VALUES (new.id, new.input);
+END;
+CREATE TRIGGER IF NOT EXISTS th_ad
+AFTER DELETE ON translationHistory BEGIN
+  INSERT INTO translationHistoryFTS(translationHistoryFTS, rowid, input)
+    VALUES('delete', old.id, old.input);
+END;
+CREATE TRIGGER IF NOT EXISTS th_au
+AFTER UPDATE ON translationHistory BEGIN
+  INSERT INTO translationHistoryFTS(translationHistoryFTS, rowid, input)
+    VALUES('delete', old.id, old.input);
+  INSERT INTO translationHistoryFTS(rowid, input)
+    VALUES (new.id, new.input);
+END;
+
+-- translationHistoryItem ↔ translationHistoryItemFTS
+CREATE TRIGGER IF NOT EXISTS thi_ai
+AFTER INSERT ON translationHistoryItem BEGIN
+  INSERT INTO translationHistoryItemFTS(rowid, output)
+    VALUES (new.id, new.output);
+END;
+CREATE TRIGGER IF NOT EXISTS thi_ad
+AFTER DELETE ON translationHistoryItem BEGIN
+  INSERT INTO translationHistoryItemFTS(translationHistoryItemFTS, rowid, output)
+    VALUES('delete', old.id, old.output);
+END;
+CREATE TRIGGER IF NOT EXISTS thi_au
+AFTER UPDATE ON translationHistoryItem BEGIN
+  INSERT INTO translationHistoryItemFTS(translationHistoryItemFTS, rowid, output)
+    VALUES('delete', old.id, old.output);
+  INSERT INTO translationHistoryItemFTS(rowid, output)
+    VALUES (new.id, new.output);
+END;
+
+-- 4) —— Search & rank translation history —— 
+
+-- fetch translation history without any query
 fetchTranslationHistory: SELECT th.id, th.createdAt, th.input,
                 json_group_array(
                     json_object(
@@ -36,3 +95,211 @@ fetchTranslationHistory: SELECT th.id, th.createdAt, th.input,
              INNER JOIN translationHistoryItem thi ON th.id = thi.parentID
              GROUP BY th.id
              ORDER BY th.id DESC;
+
+-- query translation history
+-- We'll do a UNION ALL of:
+--   A) rows whose input MATCH the query (ranked by bm25 on input)
+--   B) rows whose items MATCH the query  (ranked by bm25 on output)
+-- Then GROUP BY history id, take the best rank per history, and ORDER.
+
+queryTranslationHistory: WITH
+-- A: MATCH on input (FTS)
+input_match_hits AS (
+  SELECT
+    th.id,
+    bm25(translationHistoryFTS, 1.0) AS rank_score,
+    1 AS priority
+  FROM translationHistoryFTS
+  JOIN translationHistory th ON th.id = translationHistoryFTS.rowid
+  WHERE translationHistoryFTS MATCH :ftsQuery
+),
+
+-- B: MATCH on output (FTS)
+item_match_hits AS (
+  SELECT
+    th.id,
+    bm25(translationHistoryItemFTS, 1.0) AS rank_score,
+    2 AS priority
+  FROM translationHistoryItemFTS
+  JOIN translationHistoryItem thi ON thi.id = translationHistoryItemFTS.rowid
+  JOIN translationHistory th ON th.id = thi.parentID
+  WHERE translationHistoryItemFTS MATCH :ftsQuery
+),
+
+-- C: LIKE prefix match on input (fast)
+input_like_hits AS (
+  SELECT
+    th.id,
+    15.0 AS rank_score, -- higher score = lower priority
+    3 AS priority
+  FROM translationHistory th
+  WHERE th.input LIKE :likeQuery ESCAPE '\'
+),
+
+-- D: LIKE prefix match on output (fast)
+item_like_hits AS (
+  SELECT
+    th.id,
+    15.0 AS rank_score,
+    4 AS priority
+  FROM translationHistoryItem thi
+  JOIN translationHistory th ON th.id = thi.parentID
+  WHERE thi.output LIKE :likeQuery ESCAPE '\'
+),
+
+-- Combine results
+all_hits AS (
+  SELECT * FROM input_match_hits
+  UNION ALL
+  SELECT * FROM item_match_hits
+  UNION ALL
+  SELECT * FROM input_like_hits
+  UNION ALL
+  SELECT * FROM item_like_hits
+),
+
+-- Choose best hit per history ID
+best_hits AS (
+  SELECT
+    id,
+    MIN(priority)    AS best_priority,
+    MIN(rank_score)  AS best_rank
+  FROM all_hits
+  GROUP BY id
+)
+
+-- Final result with history and its items
+SELECT
+  th.id,
+  th.createdAt,
+  th.input,
+  json_group_array(
+    json_object(
+      'id',         thi.id,
+      'parentID',   thi.parentID,
+      'translator', thi.translator,
+      'output',     thi.output
+    )
+  ) AS historyItems
+FROM best_hits bh
+JOIN translationHistory th ON th.id = bh.id
+JOIN translationHistoryItem thi ON thi.parentID = th.id
+GROUP BY th.id
+ORDER BY bh.best_priority, bh.best_rank;
+
+
+-- 5) —— Dictionary tables —— 
+CREATE TABLE dictionary (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  simplified TEXT NOT NULL,
+  traditional TEXT NOT NULL,
+  pinyin TEXT NOT NULL,
+  definitions TEXT NOT NULL,  -- definitions separated by ;
+  examples TEXT               -- examples separated by \n, can be NULL
+);
+
+-- 2. FTS5 virtual table for full-text search
+CREATE VIRTUAL TABLE dictionaryFTS USING fts5(
+  simplified,
+  traditional,
+  pinyin,
+  definitions,
+  examples,
+  content='dictionary',   -- link FTS to normal table
+  content_rowid='id',      -- tell FTS that rowid = dictionary.id
+  tokenize = 'unicode61 remove_diacritics 2'
+);
+
+-- 3. Trigger: insert into FTS when new row inserted into dictionary
+CREATE TRIGGER dictionary_ai AFTER INSERT ON dictionary BEGIN
+  INSERT INTO dictionaryFTS(rowid, simplified, traditional, pinyin, definitions, examples)
+  VALUES (
+    new.id,
+    new.simplified,
+    new.traditional,
+    new.pinyin,
+    new.definitions,
+    new.examples
+  );
+END;
+
+-- 4. Trigger: update FTS when dictionary row updated
+CREATE TRIGGER dictionary_au AFTER UPDATE ON dictionary BEGIN
+  UPDATE dictionaryFTS
+  SET
+    simplified = new.simplified,
+    traditional = new.traditional,
+    pinyin = new.pinyin,
+    definitions = new.definitions,
+    examples = new.examples
+  WHERE rowid = new.id;
+END;
+
+-- 5. Trigger: delete from FTS when row deleted
+CREATE TRIGGER dictionary_ad AFTER DELETE ON dictionary BEGIN
+  DELETE FROM dictionaryFTS WHERE rowid = old.id;
+END;
+
+-- We give higher weight to matches in simplified/traditional/pinyin (cols 0–2),
+-- then definitions (col 3), then examples (col 4). Lower bm25 ⇒ better match.
+-- 1. Normal table with primary key
+
+-- 5) —— Dictionary Queries —— 
+
+-- check if dictionary table is empty
+checkIfDictionaryisEmpty: SELECT NOT EXISTS(SELECT 1 FROM dictionary) AS is_empty;
+
+-- query and rank dictionary
+queryDictionary: WITH
+-- A: FTS match hits
+fts_hits AS (
+  SELECT
+    dictionary.id AS parentID,
+    dictionaryFTS.simplified,
+    dictionaryFTS.traditional,
+    dictionaryFTS.pinyin,
+    dictionaryFTS.definitions,
+    dictionaryFTS.examples,
+    bm25(dictionaryFTS,
+      1.0, 1.0, 1.0,  -- high weights for simplified, traditional, pinyin
+      2.0,            -- 2× penalty for definitions
+      3.0             -- 3× penalty for examples
+    ) AS rank_score,
+    1 AS priority
+  FROM dictionaryFTS
+  JOIN dictionary ON dictionary.id = dictionaryFTS.rowid
+  WHERE dictionaryFTS MATCH :ftsQuery
+),
+
+-- B: LIKE hits (prefix only)
+like_hits AS (
+  SELECT
+    d.id AS parentID,
+    d.simplified,
+    d.traditional,
+    d.pinyin,
+    d.definitions,
+    d.examples,
+    10.0 AS rank_score, -- worse than FTS
+    2 AS priority
+  FROM dictionary d
+  WHERE d.simplified LIKE :likeQuery ESCAPE '\'
+     OR d.traditional LIKE :likeQuery ESCAPE '\'
+     OR d.pinyin LIKE :likeQuery ESCAPE '\'
+)
+
+-- Combine and select
+SELECT
+  parentID,
+  simplified,
+  traditional,
+  pinyin,
+  definitions,
+  examples
+FROM (
+  SELECT * FROM fts_hits
+  UNION ALL
+  SELECT * FROM like_hits
+)
+ORDER BY priority, rank_score
+LIMIT 100;

@@ -27,31 +27,31 @@ final class HistoryRepository {
     );
   }
 
-  List<TranslationHistory> filterHistory(
+  Future<List<TranslationHistory>> filterHistory(
     List<TranslationHistory> history,
     String query,
-  ) {
+  ) async {
     if (query.isEmpty) return history;
 
-    final queryLower = query.toLowerCase().trim();
+    final ftsQuery = '${query.trim()}*';
+    final likeQuery =
+        // ignore: lines_longer_than_80_chars
+        '${query.trim().replaceAllMapped(RegExp(r'[\\%_]'), (m) => '\\${m[0]}')}%';
 
-    final matchingInput = history.where((entry) {
-      final inputLower = entry.input.toLowerCase();
-      return inputLower.contains(queryLower);
+    final result =
+        await appDatabase.queryTranslationHistory(ftsQuery, likeQuery).get();
+
+    if (result.isEmpty) return [];
+    // Convert the result to TranslationHistory objects
+    return result.map((entry) {
+      return TranslationHistory(
+        id: entry.id,
+        timestamp: DateTime.parse(entry.createdAt),
+        input: entry.input,
+        items: TranslationHistoryItem.stringToList(
+          entry.historyItems,
+        ),
+      );
     }).toList();
-
-    // Include entries where any translation output matches the query
-    // TODO: Rank the outputs based on how well the output matches the query
-    final matchingOutput = history.where((entry) {
-      // ignore: omit_local_variable_types
-      for (final TranslationHistoryItem item in entry.items ?? []) {
-        if (item.output.toLowerCase().contains(queryLower)) {
-          return true;
-        }
-      }
-      return false;
-    }).toList();
-
-    return <TranslationHistory>{...matchingInput, ...matchingOutput}.toList();
   }
 }

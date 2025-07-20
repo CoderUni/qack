@@ -295,7 +295,9 @@ final class HomeRepository {
         throw ArgumentError('YouDao MD5 salt is null');
       }
 
-      final secondsSinceEpoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      // Use the current **UTC** time in seconds since epoch for the request
+      final secondsSinceEpoch =
+          DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
 
       final request = YouDaoTranslationRequest(
         inputText: inputText,

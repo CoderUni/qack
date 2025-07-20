@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/app/view/app.dart';
 import 'package:qack/bootstrap.dart';
 import 'package:qack/constants/key_name.dart';
+import 'package:qack/presentation/dictionary/bloc/dictionary_bloc.dart';
 import 'package:qack/presentation/history/bloc/history_bloc.dart';
 import 'package:qack/presentation/home/cubit/word_of_the_day_cubit.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
@@ -36,6 +37,7 @@ Future<void> main() async {
           FlutterSecureStorage secureStorage,
           SettingsBloc settingsBloc,
           HistoryBloc historyBloc,
+          DictionaryBloc  dictionaryBloc,
           WordOfTheDayCubit wordOfTheDayCubit,
           AppDatabase appDatabase,
         ) async {
@@ -43,6 +45,7 @@ Future<void> main() async {
             secureStorage: secureStorage,
             settingsBloc: settingsBloc,
             historyBloc: historyBloc,
+            dictionaryBloc: dictionaryBloc,
             wordOfTheDayCubit: wordOfTheDayCubit,
             appDatabase: appDatabase,
           );

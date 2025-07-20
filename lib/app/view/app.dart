@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:qack/gen/fonts.gen.dart';
 import 'package:qack/l10n/arb/app_localizations.dart';
 import 'package:qack/layout/device_info_setter.dart';
+import 'package:qack/presentation/dictionary/bloc/dictionary_bloc.dart';
 import 'package:qack/presentation/history/bloc/history_bloc.dart';
 import 'package:qack/presentation/history/repositories/repositories.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
@@ -22,6 +23,7 @@ class App extends StatelessWidget {
     required this.secureStorage,
     required this.settingsBloc,
     required this.historyBloc,
+    required this.dictionaryBloc,
     required this.wordOfTheDayCubit,
     required this.appDatabase,
     super.key,
@@ -30,6 +32,7 @@ class App extends StatelessWidget {
   final FlutterSecureStorage secureStorage;
   final SettingsBloc settingsBloc;
   final HistoryBloc historyBloc;
+  final DictionaryBloc dictionaryBloc;
   final WordOfTheDayCubit wordOfTheDayCubit;
   final AppDatabase appDatabase;
 
@@ -50,6 +53,7 @@ class App extends StatelessWidget {
       child: _App(
         settingsBloc: settingsBloc,
         historyBloc: historyBloc,
+        dictionaryBloc: dictionaryBloc,
         wordOfTheDayCubit: wordOfTheDayCubit,
       ),
     );
@@ -60,10 +64,12 @@ class _App extends StatelessWidget {
   const _App({
     required this.settingsBloc,
     required this.historyBloc,
+    required this.dictionaryBloc,
     required this.wordOfTheDayCubit,
   });
   final SettingsBloc settingsBloc;
   final HistoryBloc historyBloc;
+  final DictionaryBloc dictionaryBloc;
   final WordOfTheDayCubit wordOfTheDayCubit;
 
   @override
@@ -80,6 +86,9 @@ class _App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => historyBloc,
+        ),
+        BlocProvider(
+          create: (context) => dictionaryBloc,
         ),
         BlocProvider(create: (context) => wordOfTheDayCubit),
         BlocProvider(create: (context) => BottomNavigationBarCubit()),

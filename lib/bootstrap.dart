@@ -7,6 +7,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_client/http_client.dart';
 import 'package:qack/constants/key_name.dart';
+import 'package:qack/presentation/dictionary/bloc/dictionary_bloc.dart';
+import 'package:qack/presentation/dictionary/repositories/repositories.dart';
 import 'package:qack/presentation/history/bloc/history_bloc.dart';
 import 'package:qack/presentation/history/repositories/repositories.dart';
 import 'package:qack/presentation/home/cubit/word_of_the_day_cubit.dart';
@@ -43,6 +45,7 @@ Future<void> bootstrap(
     FlutterSecureStorage secureStorage,
     SettingsBloc settingsBloc,
     HistoryBloc historyBloc,
+    DictionaryBloc dictionaryBloc,
     WordOfTheDayCubit wordOfTheDayCubit,
     AppDatabase appDatabase,
   ) builder,
@@ -102,6 +105,11 @@ Future<void> bootstrap(
     HistoryRepository(appDatabase: appDatabase),
   )..add(const HistoryFetched());
 
+  // Initialize dictionary bloc
+  final dictionaryBloc =
+      DictionaryBloc(DictionaryRepository(appDatabase: appDatabase))
+        ..add(DictionaryFetched());
+
   // Initialize word of the day cubit
   final wordOfTheDayCubit = WordOfTheDayCubit(
     const WordOfTheDayRepository(),
@@ -121,6 +129,7 @@ Future<void> bootstrap(
       secureStorage,
       settingsBloc,
       historyBloc,
+      dictionaryBloc,
       wordOfTheDayCubit,
       appDatabase,
     ),

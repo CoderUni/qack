@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qack/constants/constants.dart';
 import 'package:qack/layout/layout_handler.dart';
 import 'package:qack/presentation/home/bloc/home_bloc.dart';
+import 'package:qack/presentation/landing/components/components.dart';
 import 'package:qack/presentation/settings/bloc/settings_bloc.dart';
 import 'package:qack/presentation/settings/cubit/enable_translator_cubit.dart';
 import 'package:qack/presentation/settings/models/models.dart';
@@ -176,6 +177,11 @@ class _MobileTranslatorPageState extends State<MobileTranslatorPage> {
                         context.read<HomeBloc>().add(
                               HomeTranslatorRemoved(removedTranslators),
                             );
+
+                        // Navigate back to home page after saving new settings
+                        context
+                            .read<BottomNavigationBarCubit>()
+                            .changePage(SelectedPage.home);
                       },
                     ),
                   );

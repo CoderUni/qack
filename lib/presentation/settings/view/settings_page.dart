@@ -62,11 +62,12 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const theme = LightTheme();
+    // const theme = LightTheme();
 
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
+        child: EditTranslatorPage(),
+        /* child: CustomScrollView(
           slivers: [
             SliverPadding(
               padding: padding,
@@ -107,6 +108,7 @@ class SettingsView extends StatelessWidget {
             ),
           ],
         ),
+      */
       ),
     );
   }

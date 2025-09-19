@@ -95,10 +95,10 @@ _Additional setup steps are required to get the app up and running._
 ## Supported Translators
 - [x] Baidu
 - [x] Deepseek
-- [WIP] Youdao
-- [] ChatGPT
-- [] DeepL
-- [] Google Translate
+- [ WIP ] Youdao
+- [ ] ChatGPT
+- [ ] DeepL
+- [ ] Google Translate
 
 Support for ChatGPT, DeepL, and Google translate will be added soon. Through some testing,
 I found that Chinese translation apps tend to perform better for English-Chinese translations
